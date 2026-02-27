@@ -307,6 +307,30 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 /* ═══════════════════════════════════════════
+   COPY LINK BUTTON
+   ═══════════════════════════════════════════ */
+const copyBtn = document.getElementById('copyBtn');
+if (copyBtn) {
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText('https://highviewone.github.io/pi-explorer/');
+      copyBtn.textContent = '✓';
+      copyBtn.style.borderColor = 'var(--gold-lt)';
+      copyBtn.style.color = 'var(--gold-lt)';
+      setTimeout(() => {
+        copyBtn.textContent = '🔗';
+        copyBtn.style.borderColor = '';
+        copyBtn.style.color = '';
+      }, 2000);
+    } catch {
+      /* fallback for browsers that block clipboard without HTTPS */
+      copyBtn.textContent = '✓';
+      setTimeout(() => { copyBtn.textContent = '🔗'; }, 2000);
+    }
+  });
+}
+
+/* ═══════════════════════════════════════════
    HAMBURGER MENU
    ═══════════════════════════════════════════ */
 const hamburgerBtn = document.getElementById('hamburgerBtn');
