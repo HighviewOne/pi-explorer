@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pi Explorer — Journey Through the Infinite</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <span class="nav-logo">π</span>
+      <ul id="navMenu">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#mystery">The Mystery</a></li>
+        <li><a href="#egypt">Egypt &amp; π</a></li>
+        <li><a href="#facts">π Facts</a></li>
+        <li><a href="#challenge">Pi Challenge</a></li>
+      </ul>
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════ HERO ═══════════════════════ -->
+  <section id="hero">
+    <div class="floating-digits" id="floatingDigits" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div class="ankh-top">☥</div>
+      <div class="big-pi">π</div>
+      <h1 class="hero-title">Pi Explorer</h1>
+      <p class="hero-subtitle">A Journey Through the Infinite</p>
+      <div class="digit-marquee">
+        3.14159265358979323846264338327950288419716939937510…
+      </div>
+      <a href="#mystery" class="hero-btn">Begin the Journey</a>
+    </div>
+    <div class="hero-pyramids" aria-hidden="true">
+      <div class="pyramid pyramid-sm"></div>
+      <div class="pyramid pyramid-lg"></div>
+      <div class="pyramid pyramid-md"></div>
+    </div>
+  </section>
+
+  <div class="divider"><span>☥ ◆ ☥ ◆ ☥</span></div>
+
+  <!-- ═══════════════════════ MYSTERY OF PI ═══════════════════════ -->
+  <section id="mystery">
+    <div class="container">
+      <h2 class="section-title">The Mystery of π</h2>
+
+      <div class="mystery-layout">
+        <div class="mystery-text">
+          <p>Take any circle in the universe — from a grain of sand to a distant galaxy. Measure its circumference (the distance all the way around). Measure its diameter (straight through the centre). Divide one by the other.</p>
+          <p>You will always get the same number: <strong class="gold">3.14159265358979…</strong></p>
+          <p>This number never ends. It never repeats. Somewhere inside it, every sequence of digits that has ever existed — or ever will — is hidden, waiting to be found.</p>
+          <p>We call it <strong class="gold">Pi (π)</strong>, and it is one of the deepest mysteries in all of mathematics.</p>
+        </div>
+        <div class="mystery-visual">
+          <svg class="circle-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-label="Circle showing C divided by d equals pi">
+            <!-- Glow ring -->
+            <circle cx="150" cy="150" r="104" fill="rgba(201,162,39,0.04)" stroke="rgba(201,162,39,0.08)" stroke-width="8"/>
+            <!-- Main circle -->
+            <circle cx="150" cy="150" r="100" fill="none" stroke="#c9a227" stroke-width="2.5" stroke-dasharray="628" stroke-dashoffset="0" class="animated-circle"/>
+            <!-- Diameter dashes -->
+            <line x1="52" y1="150" x2="248" y2="150" stroke="#f0d060" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.7"/>
+            <!-- Arrow heads -->
+            <polygon points="52,146 64,150 52,154" fill="#f0d060" opacity="0.7"/>
+            <polygon points="248,146 236,150 248,154" fill="#f0d060" opacity="0.7"/>
+            <!-- Labels -->
+            <text x="152" y="143" text-anchor="middle" fill="#f0d060" font-size="15" font-family="Cinzel, Georgia, serif">d</text>
+            <circle cx="150" cy="150" r="3.5" fill="#c9a227"/>
+            <circle cx="150" cy="50" r="5" fill="#c9a227" opacity="0.8"/>
+            <!-- Formula -->
+            <text x="150" y="272" text-anchor="middle" fill="#c9a227" font-size="15" font-family="Cinzel, Georgia, serif">C ÷ d = π</text>
+            <text x="150" y="292" text-anchor="middle" fill="#a08060" font-size="11" font-family="Lato, Arial, sans-serif">always, for every circle</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="properties-grid">
+        <div class="prop-card">
+          <div class="prop-icon">∞</div>
+          <h3>Infinite</h3>
+          <p>Pi's decimal expansion never ends. Mathematicians have now calculated over <strong>100 trillion digits</strong> — and it keeps going forever.</p>
+        </div>
+        <div class="prop-card">
+          <div class="prop-icon">≁</div>
+          <h3>Irrational</h3>
+          <p>Pi cannot be written as a simple fraction. There are no whole numbers p and q where p ÷ q = π exactly.</p>
+        </div>
+        <div class="prop-card">
+          <div class="prop-icon">∤</div>
+          <h3>Transcendental</h3>
+          <p>Pi cannot be the solution to any algebraic equation with whole-number coefficients. It <em>transcends</em> algebra itself.</p>
+        </div>
+        <div class="prop-card">
+          <div class="prop-icon">⊕</div>
+          <h3>Universal</h3>
+          <p>Pi appears in physics, probability, quantum mechanics, waves, and DNA — far beyond circles alone. It is woven into the fabric of the universe.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span>☥ ◆ ☥ ◆ ☥</span></div>
+
+  <!-- ═══════════════════════ EGYPT ═══════════════════════ -->
+  <section id="egypt">
+    <div class="container">
+      <h2 class="section-title">π in Ancient Egypt</h2>
+      <p class="section-intro">Over 3,500 years ago, the ancient Egyptians were calculating with Pi — centuries before the Greeks, and millennia before modern mathematics.</p>
+
+      <div class="egypt-cards">
+
+        <div class="egypt-card">
+          <div class="egypt-card-head">
+            <span class="egypt-icon">📜</span>
+            <div>
+              <h3>The Rhind Mathematical Papyrus</h3>
+              <span class="egypt-date">c. 1650 BC</span>
+            </div>
+          </div>
+          <div class="egypt-card-body">
+            <p>Egyptian scribe <strong>Ahmes</strong> copied a remarkable document now known as the Rhind Mathematical Papyrus. Problem 50 asks: <em>"A circular field has diameter 9 khet. What is its area?"</em></p>
+            <p>Ahmes solved it by squaring 8/9 of the diameter:</p>
+            <div class="formula-block">Area = (8/9 × 9)² = 8² = 64 square khet</div>
+            <p>This implies <strong>π ≈ 256/81 ≈ 3.16049…</strong> — only 0.6% off from the true value. Astonishing for 3,600 years ago.</p>
+          </div>
+        </div>
+
+        <div class="egypt-card">
+          <div class="egypt-card-head">
+            <span class="egypt-icon">🔺</span>
+            <div>
+              <h3>The Great Pyramid of Giza</h3>
+              <span class="egypt-date">c. 2560 BC</span>
+            </div>
+          </div>
+          <div class="egypt-card-body">
+            <p>The Great Pyramid of Khufu contains a stunning hidden ratio. Take its base perimeter and divide by twice the height:</p>
+            <div class="formula-block">(4 × 230.4 m) ÷ (2 × 146.5 m) = 921.6 ÷ 293 ≈ <strong>3.1435…</strong></div>
+            <p>Many scholars believe the architects intentionally encoded π into the pyramid's proportions — a monumental tribute to the circle, 4,500 years before the concept was formally named.</p>
+          </div>
+        </div>
+
+        <div class="egypt-card">
+          <div class="egypt-card-head">
+            <span class="egypt-icon">🪢</span>
+            <div>
+              <h3>The Rope Stretchers</h3>
+              <span class="egypt-date">c. 3000 BC</span>
+            </div>
+          </div>
+          <div class="egypt-card-body">
+            <p>Ancient Egyptian surveyors — called <strong>Harpedonaptai</strong> (rope stretchers) — used knotted ropes to lay out fields, temples, and cities with extraordinary precision.</p>
+            <p>Marking curved temple walls and circular ritual spaces required understanding how far a circular path would travel. Their practical mastery of circles was passed down through generations, forming the living roots of formal geometry.</p>
+            <p>Without these rope stretchers, the great monuments of Egypt could never have been built.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="comparison-box">
+        <h3>How Egyptian π Compares</h3>
+        <div class="comp-table">
+          <div class="comp-row comp-head">
+            <span>Source</span>
+            <span>Approximation</span>
+            <span>Value</span>
+            <span>Error</span>
+          </div>
+          <div class="comp-row">
+            <span>🔵 True π</span>
+            <span>—</span>
+            <span>3.14159265…</span>
+            <span>0%</span>
+          </div>
+          <div class="comp-row">
+            <span>📜 Rhind Papyrus</span>
+            <span>256 ÷ 81</span>
+            <span>3.16049…</span>
+            <span>0.60%</span>
+          </div>
+          <div class="comp-row">
+            <span>🔺 Great Pyramid</span>
+            <span>921.6 ÷ 293</span>
+            <span>3.14359…</span>
+            <span>0.06%</span>
+          </div>
+          <div class="comp-row">
+            <span>🏛️ Archimedes (250 BC)</span>
+            <span>between 223/71 and 22/7</span>
+            <span>3.1408 – 3.1429</span>
+            <span>0.04%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span>☥ ◆ ☥ ◆ ☥</span></div>
+
+  <!-- ═══════════════════════ FACTS ═══════════════════════ -->
+  <section id="facts">
+    <div class="container">
+      <h2 class="section-title">π Facts &amp; Wonders</h2>
+
+      <div class="facts-grid">
+
+        <div class="fact-card">
+          <div class="fact-num">1</div>
+          <h3>Pi Day</h3>
+          <p>March 14 (3/14) is celebrated as Pi Day worldwide. It is also the birthday of <strong>Albert Einstein</strong>! On March 14, 2015 at 9:26:53 AM the date and time spelled out 3.14159265358 — a once-in-a-century Pi moment.</p>
+        </div>
+
+        <div class="fact-card">
+          <div class="fact-num">2</div>
+          <h3>The Feynman Point</h3>
+          <p>At position <strong>762</strong> in Pi's digits, six 9s appear in a row: …<strong>999999</strong>… Physicist Richard Feynman joked he'd memorize Pi to that digit, then say "nine nine nine nine nine nine and so on" — making it sound like Pi was a repeating decimal!</p>
+        </div>
+
+        <div class="fact-card">
+          <div class="fact-num">3</div>
+          <h3>Space Navigation</h3>
+          <p>NASA's Jet Propulsion Laboratory uses only <strong>15 digits of Pi</strong> to calculate spacecraft trajectories to other planets. With just 40 digits you could measure the circumference of the observable universe with an error smaller than a single hydrogen atom.</p>
+        </div>
+
+        <div class="fact-card">
+          <div class="fact-num">4</div>
+          <h3>Euler's Identity</h3>
+          <p>Pi appears in what many call the most beautiful equation ever written: <strong>e<sup>iπ</sup> + 1 = 0</strong>. In one elegant line it connects five of mathematics' most fundamental constants: <em>e</em>, <em>i</em>, <em>π</em>, <em>1</em>, and <em>0</em>.</p>
+        </div>
+
+        <div class="fact-card">
+          <div class="fact-num">5</div>
+          <h3>Pi in Nature</h3>
+          <p>Pi governs the <strong>period of a pendulum</strong>, the way rivers meander across flat plains, the width of DNA strands, the shape of rainbows, and the fundamental equations of quantum mechanics. It is truly woven into the universe.</p>
+        </div>
+
+        <div class="fact-card">
+          <div class="fact-num">6</div>
+          <h3>Buffon's Needle</h3>
+          <p>Drop a needle of length L onto parallel lines spaced L apart. The probability of it crossing a line is exactly <strong>2/π ≈ 63.66%</strong>. This surprising connection lets you calculate Pi using pure physical chance — a technique called the Monte Carlo method!</p>
+        </div>
+
+        <div class="fact-card">
+          <div class="fact-num">7</div>
+          <h3>Memory Records</h3>
+          <p>The world record for memorising Pi is held by <strong>Rajveer Meena</strong> of India, who recited <strong>70,000 digits</strong> in 2015. It took 9 hours and 27 minutes — and he wore a blindfold the entire time to prove there was no cheating.</p>
+        </div>
+
+        <div class="fact-card">
+          <div class="fact-num">8</div>
+          <h3>Indiana Pi Bill</h3>
+          <p>In 1897 the Indiana state legislature nearly passed a bill that would have legally defined Pi as <strong>3.2</strong>. A mathematics professor from Purdue happened to be visiting the capitol that day and convinced the senators to drop it permanently.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><span>☥ ◆ ☥ ◆ ☥</span></div>
+
+  <!-- ═══════════════════════ CHALLENGE ═══════════════════════ -->
+  <section id="challenge">
+    <div class="container">
+      <h2 class="section-title">The Pi Challenge</h2>
+      <p class="section-intro">How many digits of π can you recite from memory? Type each digit after the decimal point. One mistake ends your run — but you can always try again!</p>
+
+      <div class="game-wrapper">
+
+        <!-- Stats bar -->
+        <div class="stats-bar">
+          <div class="stat">
+            <span class="stat-label">Current Score</span>
+            <span class="stat-value" id="currentScore">0</span>
+          </div>
+          <div class="stat highlight-stat">
+            <span class="stat-label">Personal Best ✦</span>
+            <span class="stat-value" id="personalBest">0</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Status</span>
+            <span class="stat-value" id="gameStatus">Ready</span>
+          </div>
+        </div>
+
+        <!-- Pi display -->
+        <div class="pi-display-area" id="piDisplayArea">
+          <div class="pi-display" id="piDisplay">
+            <span class="pi-prefix">3.</span><span id="typedDigits"></span><span class="cursor-blink" id="gameCursor">_</span>
+          </div>
+          <div class="digit-hint" id="digitHint">Press any digit key, or click Begin below</div>
+        </div>
+
+        <!-- Messages -->
+        <div class="game-msg" id="gameMsg"></div>
+        <div class="milestone-msg" id="milestoneMsg"></div>
+
+        <!-- Controls -->
+        <div class="game-controls">
+          <button class="btn-gold" id="startBtn">Begin the Journey</button>
+        </div>
+
+        <!-- Hidden input for mobile keyboard capture -->
+        <input type="text" id="hiddenInput" class="hidden-input" inputmode="numeric" autocomplete="off" aria-hidden="true" tabindex="-1">
+        <p class="tap-hint">📱 On mobile: tap the digit display, then use your number keyboard</p>
+
+        <!-- Reference digits -->
+        <div class="pi-reference">
+          <h3>First 50 digits — for reference &amp; study:</h3>
+          <div class="ref-digits" id="refDigits"></div>
+          <p class="ref-note">Digits light up gold as you type them correctly.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+  <footer>
+    <div class="divider"><span>☥ ◆ ☥ ◆ ☥</span></div>
+    <div class="footer-inner">
+      <div class="footer-pi">π</div>
+      <p class="footer-dedication">Made with ∞ love for our <em>Pi Explorer</em></p>
+      <p class="footer-quote">"The infinite! No other question has ever moved so profoundly the spirit of man."</p>
+      <p class="footer-attr">— David Hilbert</p>
+      <div class="footer-digits">3.14159265358979323846264338327950288419716939937510…</div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
