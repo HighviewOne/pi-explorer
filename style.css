@@ -501,7 +501,7 @@ em { color: var(--papyrus); font-style: italic; }
   padding-left: 0;
 }
 
-/* The vertical gold line */
+/* The vertical gold line — draws itself down when .tl-draw is added */
 .timeline::before {
   content: '';
   position: absolute;
@@ -516,17 +516,29 @@ em { color: var(--papyrus); font-style: italic; }
     var(--gold) 94%,
     transparent 100%
   );
+  transform-origin: top center;
+  transform: scaleY(0);
+  transition: transform 1.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
+.timeline.tl-draw::before { transform: scaleY(1); }
 
+/* Items — slide in from left + fade when .tl-visible is added */
 .tl-item {
   display: flex;
   gap: 1.6rem;
   padding-bottom: 2rem;
   position: relative;
+  opacity: 0;
+  transform: translateX(-22px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
 }
 .tl-item:last-child { padding-bottom: 0; }
+.tl-item.tl-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
 
-/* Dot on the line */
+/* Dot on the line — pops in with a bounce */
 .tl-dot {
   width: 12px;
   height: 12px;
@@ -538,7 +550,11 @@ em { color: var(--papyrus); font-style: italic; }
   margin-top: 5px;
   position: relative;
   z-index: 1;
+  transform: scale(0);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s;
 }
+.tl-item.tl-visible .tl-dot { transform: scale(1); }
+
 /* Larger glowing dot for landmark entries */
 .tl-dot-major {
   width: 16px;
@@ -547,6 +563,42 @@ em { color: var(--papyrus); font-style: italic; }
   box-shadow: 0 0 14px rgba(240,200,64,0.7);
   margin-top: 3px;
   margin-left: -2px;
+}
+
+/* Sonar-ring ripple on major dots once visible */
+.tl-dot-major::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid rgba(240,200,64,0.5);
+  transform: scale(1);
+  opacity: 0;
+  animation: none;
+}
+.tl-item.tl-visible .tl-dot-major::after {
+  animation: tlRipple 2.2s ease-out 0.6s infinite;
+}
+.tl-item.tl-visible .tl-dot-major {
+  animation: tlMajorPulse 2.5s ease-in-out 0.6s infinite;
+}
+
+@keyframes tlRipple {
+  0%   { transform: scale(1);   opacity: 0.7; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+@keyframes tlMajorPulse {
+  0%, 100% { box-shadow: 0 0 14px rgba(240,200,64,0.7); }
+  50%       { box-shadow: 0 0 26px rgba(240,200,64,1), 0 0 44px rgba(240,200,64,0.3); }
+}
+
+/* Respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .timeline::before { transition: none; transform: scaleY(1); }
+  .tl-item { opacity: 1; transform: none; transition: none; }
+  .tl-dot  { transform: scale(1); transition: none; }
+  .tl-item.tl-visible .tl-dot-major,
+  .tl-item.tl-visible .tl-dot-major::after { animation: none; }
 }
 
 .tl-content { flex: 1; min-width: 0; }

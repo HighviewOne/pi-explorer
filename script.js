@@ -296,6 +296,37 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 });
 
 /* ═══════════════════════════════════════════
+   TIMELINE ANIMATIONS
+   ═══════════════════════════════════════════ */
+(function () {
+  /* 1 — Draw the vertical line when the timeline enters view */
+  const timelineEl = document.querySelector('.timeline');
+  if (timelineEl) {
+    new IntersectionObserver((entries, obs) => {
+      if (entries[0].isIntersecting) {
+        timelineEl.classList.add('tl-draw');
+        obs.disconnect();
+      }
+    }, { threshold: 0.04 }).observe(timelineEl);
+  }
+
+  /* 2 — Reveal each item as it scrolls into view */
+  const tlItems = document.querySelectorAll('.tl-item');
+  if (tlItems.length) {
+    const itemObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('tl-visible');
+          itemObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
+
+    tlItems.forEach(item => itemObs.observe(item));
+  }
+})();
+
+/* ═══════════════════════════════════════════
    NAVBAR — subtle shadow on scroll
    ═══════════════════════════════════════════ */
 const navBar = document.getElementById('navbar');
