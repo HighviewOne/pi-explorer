@@ -492,6 +492,108 @@ em { color: var(--papyrus); font-style: italic; }
   border-radius: 0 2px 2px 0;
 }
 
+/* ═══════════════════════════════════════════════
+   TIMELINE
+   ═══════════════════════════════════════════════ */
+.timeline {
+  position: relative;
+  margin: 0 0 3.5rem;
+  padding-left: 0;
+}
+
+/* The vertical gold line */
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 5px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--gold) 6%,
+    var(--gold) 94%,
+    transparent 100%
+  );
+}
+
+.tl-item {
+  display: flex;
+  gap: 1.6rem;
+  padding-bottom: 2rem;
+  position: relative;
+}
+.tl-item:last-child { padding-bottom: 0; }
+
+/* Dot on the line */
+.tl-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--bg-0);
+  box-shadow: 0 0 7px rgba(201,162,39,0.55);
+  flex-shrink: 0;
+  margin-top: 5px;
+  position: relative;
+  z-index: 1;
+}
+/* Larger glowing dot for landmark entries */
+.tl-dot-major {
+  width: 16px;
+  height: 16px;
+  background: var(--gold-lt);
+  box-shadow: 0 0 14px rgba(240,200,64,0.7);
+  margin-top: 3px;
+  margin-left: -2px;
+}
+
+.tl-content { flex: 1; min-width: 0; }
+
+.tl-date {
+  display: block;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.72rem;
+  color: var(--gold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+.tl-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+.tl-head span { font-size: 1.1rem; line-height: 1; flex-shrink: 0; }
+.tl-head h4 {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.92rem;
+  color: var(--papyrus);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.tl-desc {
+  font-size: 0.88rem;
+  color: var(--papyrus-m);
+  line-height: 1.65;
+  margin-bottom: 0.4rem;
+}
+
+.tl-val {
+  display: inline-block;
+  font-family: 'Lato', 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: var(--gold-lt);
+  background: rgba(201,162,39,0.07);
+  border: 1px solid var(--border);
+  padding: 0.18rem 0.6rem;
+  border-radius: 2px;
+}
+
 /* Culture section header */
 .culture-header {
   display: flex;
