@@ -35,3 +35,11 @@ Just open `index.html` in a browser, or serve the folder:
 python -m http.server 8000
 # then open http://localhost:8000
 ```
+
+## Deploying
+
+Pushing to `main` deploys automatically via GitHub Actions (`.github/workflows/static.yml`) to GitHub Pages.
+The workflow publishes an explicit list of files — if you add a new asset (image, page, script), add it to the
+`cp` line in that workflow or it won't be published.
+
+`og-image.png` is the 1200×630 link-preview image used by LinkedIn, Bluesky, etc.; regenerate it if the logo or title changes.
