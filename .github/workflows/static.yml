@@ -12,7 +12,8 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: true
+  # let an in-flight deployment finish rather than cutting it off
+  cancel-in-progress: false
 
 jobs:
   deploy:
@@ -23,10 +24,15 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Collect site files
+        # publish only the site itself, not README/LICENSE/.github
+        run: |
+          mkdir _site
+          cp index.html style.css script.js logo.svg favicon.svg og-image.png _site/
       - name: Upload static files
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: _site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

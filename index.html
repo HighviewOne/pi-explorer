@@ -4,6 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pi Explorer — Journey Through the Infinite</title>
+  <meta name="description" content="An interactive journey through π — its mystery, its history across ancient civilisations, fun facts, and a digit memorisation challenge.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pi Explorer — Journey Through the Infinite">
+  <meta property="og:description" content="The mystery of π, its history from ancient Egypt to modern supercomputers, and a challenge: how many digits can you remember?">
+  <meta property="og:url" content="https://highviewone.github.io/pi-explorer/">
+  <meta property="og:image" content="https://highviewone.github.io/pi-explorer/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="style.css">
@@ -13,7 +23,7 @@
   <!-- Navigation -->
   <nav id="navbar">
     <div class="nav-inner">
-      <span class="nav-logo">π</span>
+      <a href="#hero" class="nav-logo" aria-label="Back to top">π</a>
       <ul id="navMenu">
         <li><a href="#hero">Home</a></li>
         <li><a href="#mystery">The Mystery</a></li>
@@ -47,7 +57,7 @@
            href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fhighviewone.github.io%2Fpi-explorer%2F"
            target="_blank" rel="noopener" aria-label="Share on LinkedIn">in</a>
         <a class="share-btn share-bsky"
-           href="https://bsky.app/intent/compose?text=Built%20a%20Pi%20website%20for%20my%20son%20%F0%9F%94%A2%20Interactive%20memorization%20game%2C%20ancient%20Egypt%27s%20hidden%20Pi%20connections%2C%20and%20more.%20%F0%9F%94%97%20highviewone.github.io%2Fpi-explorer%2F%20%23Pi%20%23STEM"
+           href="https://bsky.app/intent/compose?text=Explore%20the%20story%20of%20%CF%80%20%E2%80%94%20from%20ancient%20Egypt%20to%20supercomputers%20%E2%80%94%20and%20test%20how%20many%20digits%20you%20can%20remember%20%F0%9F%94%A2%20highviewone.github.io%2Fpi-explorer%2F%20%23Pi%20%23STEM"
            target="_blank" rel="noopener" aria-label="Share on Bluesky">🦋</a>
         <button class="share-btn share-copy" id="copyBtn" aria-label="Copy link">🔗</button>
       </div>
@@ -70,7 +80,7 @@
         <div class="mystery-text">
           <p>Take any circle in the universe — from a grain of sand to a distant galaxy. Measure its circumference (the distance all the way around). Measure its diameter (straight through the centre). Divide one by the other.</p>
           <p>You will always get the same number: <strong class="gold">3.14159265358979…</strong></p>
-          <p>This number never ends. It never repeats. Somewhere inside it, every sequence of digits that has ever existed — or ever will — is hidden, waiting to be found.</p>
+          <p>This number never ends. It never repeats. Mathematicians believe — though no one has yet proved it — that somewhere inside it, every sequence of digits that has ever existed is hidden, waiting to be found.</p>
           <p>We call it <strong class="gold">Pi (π)</strong>, and it is one of the deepest mysteries in all of mathematics.</p>
         </div>
         <div class="mystery-visual">
@@ -99,7 +109,7 @@
         <div class="prop-card">
           <div class="prop-icon">∞</div>
           <h3>Infinite</h3>
-          <p>Pi's decimal expansion never ends. Mathematicians have now calculated over <strong>100 trillion digits</strong> — and it keeps going forever.</p>
+          <p>Pi's decimal expansion never ends. Computers have now calculated over <strong>300 trillion digits</strong> — and it keeps going forever.</p>
         </div>
         <div class="prop-card">
           <div class="prop-icon">≁</div>
@@ -135,7 +145,7 @@
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">c. 3000 BC</span>
-            <div class="tl-head"><span>🇪🇬</span><h4>Egypt — Rope Stretchers</h4></div>
+            <div class="tl-head"><span>🇪🇬</span><h3>Egypt — Rope Stretchers</h3></div>
             <p class="tl-desc">The Harpedonaptai use knotted ropes to map out circular temples and sacred spaces with remarkable accuracy.</p>
             <span class="tl-val">π ≈ practical geometry</span>
           </div>
@@ -145,9 +155,9 @@
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">c. 2560 BC</span>
-            <div class="tl-head"><span>🇪🇬</span><h4>Egypt — Great Pyramid of Giza</h4></div>
-            <p class="tl-desc">The proportions of Khufu's pyramid encode Pi in stone — perimeter ÷ twice the height ≈ π.</p>
-            <span class="tl-val">π ≈ 3.1435</span>
+            <div class="tl-head"><span>🇪🇬</span><h3>Egypt — Great Pyramid of Giza</h3></div>
+            <p class="tl-desc">The proportions of Khufu's pyramid come remarkably close to π — perimeter ÷ twice the height ≈ π.</p>
+            <span class="tl-val">π ≈ 3.1454</span>
           </div>
         </div>
 
@@ -155,7 +165,7 @@
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">c. 1900 BC</span>
-            <div class="tl-head"><span>🏺</span><h4>Babylon — Cuneiform Tablets</h4></div>
+            <div class="tl-head"><span>🏺</span><h3>Babylon — Cuneiform Tablets</h3></div>
             <p class="tl-desc">Clay cuneiform tablets record 25 ÷ 8 as the ratio of a circle's circumference to its diameter.</p>
             <span class="tl-val">π ≈ 3.125</span>
           </div>
@@ -165,7 +175,7 @@
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">c. 1650 BC</span>
-            <div class="tl-head"><span>🇪🇬</span><h4>Egypt — Rhind Mathematical Papyrus</h4></div>
+            <div class="tl-head"><span>🇪🇬</span><h3>Egypt — Rhind Mathematical Papyrus</h3></div>
             <p class="tl-desc">Scribe Ahmes uses 256/81 to solve circular field area problems — only 0.6% off from the true value.</p>
             <span class="tl-val">π ≈ 3.16049</span>
           </div>
@@ -175,7 +185,7 @@
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">c. 900 BC</span>
-            <div class="tl-head"><span>📖</span><h4>Ancient Israel — Solomon's Temple</h4></div>
+            <div class="tl-head"><span>📖</span><h3>Ancient Israel — Solomon's Temple</h3></div>
             <p class="tl-desc">The Bible describes a great circular basin: "ten cubits across and thirty cubits around" — implying π ≈ 3.</p>
             <span class="tl-val">π ≈ 3</span>
           </div>
@@ -185,7 +195,7 @@
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">c. 800 – 200 BC</span>
-            <div class="tl-head"><span>🪷</span><h4>India — The Sulbasutras</h4></div>
+            <div class="tl-head"><span>🪷</span><h3>India — The Sulbasutras</h3></div>
             <p class="tl-desc">Ancient Vedic texts on constructing sacred fire altars contain precise π approximations for circular layouts.</p>
             <span class="tl-val">π ≈ 3.088 – 3.141</span>
           </div>
@@ -195,7 +205,7 @@
           <div class="tl-dot tl-dot-major"></div>
           <div class="tl-content">
             <span class="tl-date">c. 250 BC</span>
-            <div class="tl-head"><span>🏛️</span><h4>Greece — Archimedes of Syracuse</h4></div>
+            <div class="tl-head"><span>🏛️</span><h3>Greece — Archimedes of Syracuse</h3></div>
             <p class="tl-desc">The first rigorous mathematical proof of π, using polygons with up to 96 sides inscribed in and around a circle.</p>
             <span class="tl-val">3.1408 &lt; π &lt; 3.1429</span>
           </div>
@@ -205,7 +215,7 @@
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">c. 263 AD</span>
-            <div class="tl-head"><span>🏮</span><h4>China — Liu Hui</h4></div>
+            <div class="tl-head"><span>🏮</span><h3>China — Liu Hui</h3></div>
             <p class="tl-desc">Using a polygon with 3,072 sides, Liu Hui calculates π to five accurate decimal places.</p>
             <span class="tl-val">π ≈ 3.14159</span>
           </div>
@@ -215,7 +225,7 @@
           <div class="tl-dot tl-dot-major"></div>
           <div class="tl-content">
             <span class="tl-date">c. 480 AD</span>
-            <div class="tl-head"><span>🏮</span><h4>China — Zu Chongzhi</h4></div>
+            <div class="tl-head"><span>🏮</span><h3>China — Zu Chongzhi</h3></div>
             <p class="tl-desc">Calculates π to 7 decimal places and finds 355/113 — a record that would stand unbeaten for nearly 1,000 years.</p>
             <span class="tl-val">π ≈ 3.1415929 &nbsp;✦ World record × 1,000 years</span>
           </div>
@@ -225,7 +235,7 @@
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">499 AD</span>
-            <div class="tl-head"><span>🪷</span><h4>India — Aryabhata</h4></div>
+            <div class="tl-head"><span>🪷</span><h3>India — Aryabhata</h3></div>
             <p class="tl-desc">Computes 62832 ÷ 20000 and explicitly notes it is an <em>approximation</em> — a remarkably modern scientific attitude.</p>
             <span class="tl-val">π ≈ 3.1416</span>
           </div>
@@ -234,9 +244,9 @@
         <div class="tl-item">
           <div class="tl-dot tl-dot-major"></div>
           <div class="tl-content">
-            <span class="tl-date">c. 1400 AD</span>
-            <div class="tl-head"><span>🌙</span><h4>Islamic Golden Age — Al-Kashi</h4></div>
-            <p class="tl-desc">Jamshīd al-Kāshī of Samarkand computes π to 16 decimal places using a polygon with billions of sides.</p>
+            <span class="tl-date">1424 AD</span>
+            <div class="tl-head"><span>🌙</span><h3>Islamic Golden Age — Al-Kashi</h3></div>
+            <p class="tl-desc">Jamshīd al-Kāshī of Samarkand computes π to 16 decimal places using a polygon with over 800 million sides.</p>
             <span class="tl-val">π ≈ 3.1415926535897932 &nbsp;✦ World record</span>
           </div>
         </div>
@@ -245,7 +255,7 @@
           <div class="tl-dot"></div>
           <div class="tl-content">
             <span class="tl-date">1706 AD</span>
-            <div class="tl-head"><span>🔣</span><h4>Wales — William Jones</h4></div>
+            <div class="tl-head"><span>🔣</span><h3>Wales — William Jones</h3></div>
             <p class="tl-desc">Welsh mathematician William Jones is the first to use the Greek letter <strong>π</strong> in print to represent the circle ratio. The symbol spreads worldwide after Euler adopts it in 1737.</p>
             <span class="tl-val">The symbol π is born</span>
           </div>
@@ -254,9 +264,9 @@
         <div class="tl-item">
           <div class="tl-dot tl-dot-major"></div>
           <div class="tl-content">
-            <span class="tl-date">2024 AD</span>
-            <div class="tl-head"><span>💻</span><h4>Modern Computing</h4></div>
-            <p class="tl-desc">Computers have now calculated over <strong>100 trillion digits</strong> of π. The journey that began with a knotted rope in ancient Egypt has no end in sight.</p>
+            <span class="tl-date">2025 AD</span>
+            <div class="tl-head"><span>💻</span><h3>Modern Computing</h3></div>
+            <p class="tl-desc">Computers have now calculated over <strong>300 trillion digits</strong> of π. The journey that began with a knotted rope in ancient Egypt has no end in sight.</p>
             <span class="tl-val">π = 3.14159265358979… ∞</span>
           </div>
         </div>
@@ -298,8 +308,8 @@
           </div>
           <div class="egypt-card-body">
             <p>The Great Pyramid of Khufu contains a stunning hidden ratio. Take its base perimeter and divide by twice the height:</p>
-            <div class="formula-block">(4 × 230.4 m) ÷ (2 × 146.5 m) = 921.6 ÷ 293 ≈ <strong>3.1435…</strong></div>
-            <p>Many scholars believe the architects intentionally encoded π into the pyramid's proportions — a monumental tribute to the circle, 4,500 years before the concept was formally named.</p>
+            <div class="formula-block">(4 × 230.4 m) ÷ (2 × 146.5 m) = 921.6 ÷ 293 ≈ <strong>3.1454…</strong></div>
+            <p>Was it on purpose? Most Egyptologists think it comes from the builders' slope rule, the <em>seked</em>: 5½ palms of run for every cubit (7 palms) of rise. That slope works out to exactly 22/7 ≈ 3.1429 — so π may be hiding in the pyramid by happy accident!</p>
           </div>
         </div>
 
@@ -334,7 +344,7 @@
           <div class="egypt-card-body">
             <p>Clay cuneiform tablets unearthed in Mesopotamia show that Babylonian mathematicians used <strong>25/8</strong> as their approximation for π:</p>
             <div class="formula-block">25 ÷ 8 = 3.125 (error: 0.53%)</div>
-            <p>Remarkably, some tablets suggest they also knew <strong>3 + 1/8 = 3.125</strong> was only an approximation — showing genuine mathematical self-awareness thousands of years ago.</p>
+            <p>That's within about half a percent of the true value — impressive precision for a civilisation that did its arithmetic in base 60.</p>
           </div>
         </div>
 
@@ -382,7 +392,7 @@
           <div class="egypt-card-body">
             <p>The <strong>Sulbasutras</strong> (~800–200 BC) are ancient Vedic texts on constructing sacred fire altars. They contain precise π approximations used for laying out circular altars with exact areas.</p>
             <p>Then in 499 AD, the great mathematician <strong>Aryabhata</strong> calculated:</p>
-            <div class="formula-block">π ≈ 62832 ÷ 20000 = 3.1416 (error: 0.007%)</div>
+            <div class="formula-block">π ≈ 62832 ÷ 20000 = 3.1416 (error: 0.0002%)</div>
             <p>He also noted it was an <em>approximation</em> — a remarkably modern scientific attitude.</p>
           </div>
         </div>
@@ -409,12 +419,12 @@
             <span class="egypt-icon">🌙</span>
             <div>
               <h3>The Islamic Golden Age</h3>
-              <span class="egypt-date">c. 800 – 1400 AD</span>
+              <span class="egypt-date">c. 800 – 1424 AD</span>
             </div>
           </div>
           <div class="egypt-card-body">
             <p>Islamic scholars translated and expanded upon Greek and Indian mathematics, preserving ancient knowledge during Europe's Dark Ages. <strong>Al-Khwarizmi</strong> (whose name gave us the word <em>algorithm</em>) used π = 3.1416.</p>
-            <p>By 1400 AD, <strong>Jamshīd al-Kāshī</strong> of Samarkand calculated π to an extraordinary <strong>16 decimal places</strong> — the world record at the time — using a polygon with 3 × 2²⁸ sides.</p>
+            <p>In 1424 AD, <strong>Jamshīd al-Kāshī</strong> of Samarkand calculated π to an extraordinary <strong>16 decimal places</strong> — the world record at the time — using a polygon with 3 × 2²⁸ sides.</p>
           </div>
         </div>
 
@@ -423,23 +433,23 @@
       <!-- ── World comparison table ── -->
       <div class="comparison-box">
         <h3>π Approximations Across History</h3>
-        <div class="comp-table">
-          <div class="comp-row comp-head">
-            <span>Culture &amp; Source</span>
-            <span>Approximation</span>
-            <span>Value</span>
-            <span>Error</span>
-          </div>
-          <div class="comp-row"><span>🔵 True π</span><span>—</span><span>3.14159265…</span><span>0%</span></div>
-          <div class="comp-row"><span>📖 Bible / Israel (~900 BC)</span><span>30 ÷ 10</span><span>3</span><span>4.51%</span></div>
-          <div class="comp-row"><span>🏺 Babylon (~1600 BC)</span><span>25 ÷ 8</span><span>3.125</span><span>0.53%</span></div>
-          <div class="comp-row"><span>📜 Egypt — Rhind Papyrus (~1650 BC)</span><span>256 ÷ 81</span><span>3.16049…</span><span>0.60%</span></div>
-          <div class="comp-row"><span>🔺 Egypt — Great Pyramid (~2560 BC)</span><span>921.6 ÷ 293</span><span>3.14359…</span><span>0.06%</span></div>
-          <div class="comp-row"><span>🏛️ Greece — Archimedes (~250 BC)</span><span>between 223/71 &amp; 22/7</span><span>3.1408 – 3.1429</span><span>0.04%</span></div>
-          <div class="comp-row"><span>🪷 India — Aryabhata (499 AD)</span><span>62832 ÷ 20000</span><span>3.1416</span><span>0.007%</span></div>
-          <div class="comp-row"><span>🏮 China — Zu Chongzhi (480 AD)</span><span>355 ÷ 113</span><span>3.1415929…</span><span>0.000008%</span></div>
-          <div class="comp-row"><span>🌙 Islamic — Al-Kashi (~1400 AD)</span><span>16 decimal places</span><span>3.14159265358979…</span><span>&lt; 0.000001%</span></div>
-        </div>
+        <table class="comp-table">
+          <thead>
+            <tr><th scope="col">Culture &amp; Source</th><th scope="col">Approximation</th><th scope="col">Value</th><th scope="col">Error</th></tr>
+          </thead>
+          <tbody>
+              <tr><th scope="row">🔵 True π</th><td>—</td><td>3.14159265…</td><td>0%</td></tr>
+              <tr><th scope="row">🔺 Egypt — Great Pyramid (~2560 BC)</th><td>921.6 ÷ 293</td><td>3.14539…</td><td>0.12%</td></tr>
+              <tr><th scope="row">🏺 Babylon (~1900 BC)</th><td>25 ÷ 8</td><td>3.125</td><td>0.53%</td></tr>
+              <tr><th scope="row">📜 Egypt — Rhind Papyrus (~1650 BC)</th><td>256 ÷ 81</td><td>3.16049…</td><td>0.60%</td></tr>
+              <tr><th scope="row">📖 Bible / Israel (~900 BC)</th><td>30 ÷ 10</td><td>3</td><td>4.51%</td></tr>
+              <tr><th scope="row">🏛️ Greece — Archimedes (~250 BC)</th><td>between 223/71 &amp; 22/7</td><td>3.1408 – 3.1429</td><td>≤ 0.04%</td></tr>
+              <tr><th scope="row">🏮 China — Liu Hui (263 AD)</th><td>3,072-sided polygon</td><td>3.14159</td><td>0.00008%</td></tr>
+              <tr><th scope="row">🏮 China — Zu Chongzhi (480 AD)</th><td>355 ÷ 113</td><td>3.1415929…</td><td>0.000008%</td></tr>
+              <tr><th scope="row">🪷 India — Aryabhata (499 AD)</th><td>62832 ÷ 20000</td><td>3.1416</td><td>0.0002%</td></tr>
+              <tr><th scope="row">🌙 Islamic — Al-Kashi (1424 AD)</th><td>16 decimal places</td><td>3.14159265358979…</td><td>&lt; 0.000001%</td></tr>
+          </tbody>
+        </table>
       </div>
 
     </div>
@@ -533,7 +543,7 @@
         </div>
 
         <!-- Pi display -->
-        <div class="pi-display-area" id="piDisplayArea">
+        <div class="pi-display-area" id="piDisplayArea" tabindex="0" aria-label="Pi digit entry: type the digits of pi after the decimal point">
           <div class="pi-display" id="piDisplay">
             <span class="pi-prefix">3.</span><span id="typedDigits"></span><span class="cursor-blink" id="gameCursor">_</span>
           </div>
@@ -541,8 +551,8 @@
         </div>
 
         <!-- Messages -->
-        <div class="game-msg" id="gameMsg"></div>
-        <div class="milestone-msg" id="milestoneMsg"></div>
+        <div class="game-msg" id="gameMsg" role="status" aria-live="polite"></div>
+        <div class="milestone-msg" id="milestoneMsg" role="status" aria-live="polite"></div>
 
         <!-- Controls -->
         <div class="game-controls">
@@ -550,7 +560,7 @@
         </div>
 
         <!-- Hidden input for mobile keyboard capture -->
-        <input type="text" id="hiddenInput" class="hidden-input" inputmode="numeric" autocomplete="off" aria-hidden="true" tabindex="-1">
+        <input type="text" id="hiddenInput" class="hidden-input" inputmode="numeric" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="Next digit of pi" tabindex="-1">
         <p class="tap-hint">📱 On mobile: tap the digit display, then use your number keyboard</p>
 
         <!-- Reference digits -->

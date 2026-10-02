@@ -30,10 +30,10 @@ const PI_DIGITS =
 
 /* ─── Milestones ─── */
 const MILESTONES = [
-  { at:  5,  msg: '☥ Five digits! The ancient Egyptians used about this many in their calculations.' },
+  { at:  5,  msg: '☥ Five digits! That\'s already more precise than any value the ancient Egyptians used.' },
   { at: 10,  msg: '⚡ 10 digits! You now know more Pi than most people on Earth.' },
   { at: 20,  msg: '🔺 20 digits! The Great Pyramid builders would be astonished.' },
-  { at: 31,  msg: '📜 31 digits! You\'ve matched the best precision of the Rhind Papyrus era.' },
+  { at: 31,  msg: '🌙 31 digits! Nearly double the 16 decimals Al-Kashi computed in 1424.' },
   { at: 50,  msg: '🚀 50 digits! NASA only needs 15 to fly to other planets — you\'ve tripled that!' },
   { at: 75,  msg: '⭐ 75 digits! You\'re entering champion territory.' },
   { at: 100, msg: '🏆 100 DIGITS!! You are a true Pi Master!' },
@@ -41,11 +41,23 @@ const MILESTONES = [
   { at: 200, msg: '👑 ALL 200 DIGITS! You are the Pi Explorer Supreme!' },
 ];
 
+/* ─── Storage (may be blocked in private windows) ─── */
+const BEST_KEY = 'piExplorerBest';
+function loadBest() {
+  try { return parseInt(localStorage.getItem(BEST_KEY) || '0', 10) || 0; }
+  catch { return 0; }
+}
+function saveBest(n) {
+  try { localStorage.setItem(BEST_KEY, n); } catch { /* not persisted */ }
+}
+
 /* ─── Game state ─── */
 let active      = false;
 let idx         = 0;
-let bestScore   = parseInt(localStorage.getItem('piExplorerBest') || '0', 10);
+let bestScore   = loadBest();
+let runStartBest = bestScore;  /* best before this run, to detect a true new record */
 let mileSeen    = new Set();
+let challengeInView = false;
 
 /* ─── DOM references ─── */
 const el = {
@@ -71,13 +83,20 @@ buildRefDigits();
 
 el.startBtn.addEventListener('click', startGame);
 el.displayArea.addEventListener('click', () => {
-  if (active) el.hiddenInput.focus();
+  if (active) el.hiddenInput.focus({ preventScroll: true });
 });
+
+/* Only capture digit keys while the challenge is on screen (or its input has focus),
+   so typing a number elsewhere on the page doesn't hijack the reader */
+new IntersectionObserver((entries) => {
+  challengeInView = entries[0].isIntersecting;
+}, { threshold: 0.3 }).observe(el.displayArea);
 
 /* Keyboard input (desktop) */
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey || e.altKey || e.metaKey) return;
   if (!/^[0-9]$/.test(e.key)) return;
+  if (!challengeInView && document.activeElement !== el.hiddenInput) return;
   e.preventDefault();
   if (!active) {
     startGame();
@@ -103,6 +122,7 @@ function startGame() {
   active   = true;
   idx      = 0;
   mileSeen = new Set();
+  runStartBest = bestScore;
 
   el.typedDigits.innerHTML = '';
   el.currentScore.textContent = '0';
@@ -115,7 +135,7 @@ function startGame() {
   updateRefDisplay(0);
 
   el.cursor.style.display = 'inline';
-  el.hiddenInput.focus();
+  el.hiddenInput.focus({ preventScroll: true });
 }
 
 function processDigit(d) {
@@ -153,7 +173,7 @@ function correct(d) {
   /* personal best */
   if (idx > bestScore) {
     bestScore = idx;
-    localStorage.setItem('piExplorerBest', bestScore);
+    saveBest(bestScore);
     el.personalBest.textContent = bestScore;
   }
 
@@ -184,7 +204,7 @@ function wrong(correctDigit) {
   el.gameMsg.innerHTML =
     `<strong>Not quite!</strong> ${scoreText}` +
     `<span class="wrong-digit-reveal">${correctDigit}</span>` +
-    (idx > 0 && idx === bestScore
+    (idx > runStartBest
       ? '<br>🎉 That was a new personal best!'
       : '');
 
@@ -193,7 +213,9 @@ function wrong(correctDigit) {
 }
 
 function allComplete() {
+  active = false;
   el.gameStatus.textContent = 'Complete!';
+  el.digitHint.textContent  = 'Click "Play Again" or press a digit key to start over.';
   el.cursor.style.display   = 'none';
   el.gameMsg.className = 'game-msg best';
   el.gameMsg.innerHTML =
@@ -284,18 +306,6 @@ function createFloatingDigits() {
 createFloatingDigits();
 
 /* ═══════════════════════════════════════════
-   SMOOTH SCROLL (fallback for older browsers)
-   ═══════════════════════════════════════════ */
-document.querySelectorAll('a[href^="#"]').forEach(link => {
-  link.addEventListener('click', function (e) {
-    const target = document.querySelector(this.getAttribute('href'));
-    if (!target) return;
-    e.preventDefault();
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-});
-
-/* ═══════════════════════════════════════════
    TIMELINE ANIMATIONS
    ═══════════════════════════════════════════ */
 (function () {
@@ -332,32 +342,31 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 const navBar = document.getElementById('navbar');
 window.addEventListener('scroll', () => {
   if (!navBar) return;
-  navBar.style.boxShadow = window.scrollY > 60
-    ? '0 2px 24px rgba(0,0,0,0.6)'
-    : 'none';
+  navBar.classList.toggle('scrolled', window.scrollY > 60);
 }, { passive: true });
 
 /* ═══════════════════════════════════════════
    COPY LINK BUTTON
    ═══════════════════════════════════════════ */
+const SITE_URL = 'https://highviewone.github.io/pi-explorer/';
 const copyBtn = document.getElementById('copyBtn');
 if (copyBtn) {
   copyBtn.addEventListener('click', async () => {
     try {
-      await navigator.clipboard.writeText('https://highviewone.github.io/pi-explorer/');
-      copyBtn.textContent = '✓';
-      copyBtn.style.borderColor = 'var(--gold-lt)';
-      copyBtn.style.color = 'var(--gold-lt)';
-      setTimeout(() => {
-        copyBtn.textContent = '🔗';
-        copyBtn.style.borderColor = '';
-        copyBtn.style.color = '';
-      }, 2000);
+      await navigator.clipboard.writeText(SITE_URL);
     } catch {
-      /* fallback for browsers that block clipboard without HTTPS */
-      copyBtn.textContent = '✓';
-      setTimeout(() => { copyBtn.textContent = '🔗'; }, 2000);
+      /* clipboard blocked (e.g. no HTTPS) — let the user copy it by hand */
+      window.prompt('Copy this link:', SITE_URL);
+      return;
     }
+    copyBtn.textContent = '✓';
+    copyBtn.setAttribute('aria-label', 'Link copied');
+    copyBtn.classList.add('copied');
+    setTimeout(() => {
+      copyBtn.textContent = '🔗';
+      copyBtn.setAttribute('aria-label', 'Copy link');
+      copyBtn.classList.remove('copied');
+    }, 2000);
   });
 }
 
@@ -395,4 +404,13 @@ if (hamburgerBtn && navBar) {
     navBar.classList.remove('open');
     hamburgerBtn.setAttribute('aria-expanded', 'false');
   }, { passive: true });
+
+  /* Close on Escape and return focus to the toggle */
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navBar.classList.contains('open')) {
+      navBar.classList.remove('open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
+      hamburgerBtn.focus();
+    }
+  });
 }

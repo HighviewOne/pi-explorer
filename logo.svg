@@ -26,7 +26,7 @@
     </filter>
 
     <!-- Bottom arc path for curved "PI EXPLORER" text -->
-    <path id="lgBot" d="M 22,100 A 78,78 0 0,1 178,100"/>
+    <path id="lgBot" d="M 34,100 A 66,66 0 0,0 166,100"/>
 
   </defs>
 
