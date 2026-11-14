@@ -499,6 +499,7 @@ if (copyBtn) {
    HAMBURGER MENU
    ═══════════════════════════════════════════ */
 const hamburgerBtn = document.getElementById('hamburgerBtn');
+let menuOpenedAtY = 0;  /* scroll position when the mobile menu was opened */
 
 if (hamburgerBtn && navBar) {
   /* Toggle open/close */
@@ -506,6 +507,7 @@ if (hamburgerBtn && navBar) {
     e.stopPropagation();
     const isOpen = navBar.classList.toggle('open');
     hamburgerBtn.setAttribute('aria-expanded', isOpen);
+    if (isOpen) menuOpenedAtY = window.scrollY;
   });
 
   /* Close when a nav link is tapped */
@@ -524,8 +526,11 @@ if (hamburgerBtn && navBar) {
     }
   });
 
-  /* Close if user scrolls (feels natural on mobile) */
+  /* Close once the user really scrolls the page. A small threshold ignores the
+     few pixels a mobile browser shifts when its address bar shows or hides. */
   window.addEventListener('scroll', () => {
+    if (!navBar.classList.contains('open')) return;
+    if (Math.abs(window.scrollY - menuOpenedAtY) < 60) return;
     navBar.classList.remove('open');
     hamburgerBtn.setAttribute('aria-expanded', 'false');
   }, { passive: true });
