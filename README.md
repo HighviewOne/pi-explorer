@@ -14,7 +14,7 @@ Pi Explorer is a single-page, scrollytelling site that turns the story of π int
 - **The Mystery of π** — why π is infinite, irrational, transcendental, and universal
 - **π Through the Ages** — an animated timeline and approximations from Ancient Egypt, Babylon, Israel, Greece, India, China, and the Islamic Golden Age
 - **π Facts & Wonders** — Pi Day, the Feynman Point, and more
-- **The Pi Challenge** — type π from memory, one digit at a time, with milestones and a personal best saved in the browser
+- **The Pi Challenge** — type the first 1,000 digits of π from memory. Challenge mode ends on the first mistake (personal best saved in the browser); Practice mode shows the right digit and keeps going, can start at any block of 10, and marks the groups you slipped on in the study list
 
 ## Tech stack
 

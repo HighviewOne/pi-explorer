@@ -38,6 +38,23 @@ body {
 
 :focus-visible { outline: 2px solid var(--gold-lt); outline-offset: 3px; }
 
+/* Skip link: hidden until focused with the keyboard */
+.skip-link {
+  position: absolute;
+  top: 0.5rem; left: 0.5rem;
+  z-index: 2000;
+  padding: 0.6rem 1.1rem;
+  background: var(--gold-lt);
+  color: #080300;
+  font-family: 'Cinzel', Georgia, serif;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 2px;
+  transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
+main:focus { outline: none; }
+
 ::selection { background: rgba(201,162,39,0.35); color: var(--gold-pale); }
 
 ::-webkit-scrollbar { width: 7px; }
@@ -453,7 +470,8 @@ em { color: var(--papyrus); font-style: italic; }
   gap: 1rem;
 }
 .egypt-icon { font-size: 2rem; line-height: 1; flex-shrink: 0; margin-top: 0.1rem; }
-.egypt-card-head h3 {
+.egypt-card-head h3,
+.egypt-card-head h4 {
   font-family: 'Cinzel', Georgia, serif;
   color: var(--gold-lt);
   font-size: 0.95rem;
@@ -825,6 +843,55 @@ em { color: var(--papyrus); font-style: italic; }
 }
 .highlight-stat .stat-value { color: var(--gold-lt); }
 
+/* Mode toggle */
+.mode-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.mode-btn {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--papyrus-m);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 0.6rem 1.6rem;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+.mode-btn:first-child { border-radius: 2px 0 0 2px; }
+.mode-btn:last-child  { border-radius: 0 2px 2px 0; border-left: none; }
+.mode-btn:hover { color: var(--papyrus); }
+.mode-btn.active {
+  color: #080300;
+  background: linear-gradient(135deg, var(--gold-lt), var(--gold));
+  font-weight: 700;
+}
+
+.practice-opts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.82rem;
+  color: var(--papyrus-m);
+  letter-spacing: 0.1em;
+}
+.practice-opts[hidden] { display: none; }
+.practice-opts select {
+  font: inherit;
+  letter-spacing: 0.05em;
+  color: var(--papyrus);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.4rem 0.6rem;
+}
+
 /* Pi display area */
 .pi-display-area {
   background: var(--bg-card);
@@ -861,6 +928,15 @@ em { color: var(--papyrus); font-style: italic; }
   from { opacity: 0; transform: scale(1.6) translateY(-4px); }
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
+
+.digit-miss {
+  color: #ff8070;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  display: inline-block;
+  animation: digitPop 0.18s ease;
+}
+.digit-context { color: var(--papyrus-d); }
 
 .digit-gap {
   display: inline-block;
@@ -998,7 +1074,35 @@ em { color: var(--papyrus); font-style: italic; }
   letter-spacing: 0.1em;
   margin-bottom: 1rem;
 }
-.ref-digits { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.ref-digits {
+  position: relative;     /* rows' offsetTop is measured from here */
+  max-height: 17rem;
+  overflow-y: auto;
+  padding-right: 0.4rem;
+  scroll-behavior: smooth;
+}
+.ref-row {
+  display: grid;
+  grid-template-columns: 2.6rem 1fr;
+  align-items: start;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(201,162,39,0.08);
+}
+.ref-row:last-child { border-bottom: none; }
+.ref-row-groups {
+  display: grid;
+  grid-template-columns: repeat(5, max-content);
+  gap: 0.5rem;
+}
+.ref-row-label {
+  width: 2.6rem;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.72rem;
+  color: var(--papyrus-d);
+  text-align: right;
+  padding: 0.35rem 0.3rem 0 0;
+}
 
 .ref-group {
   font-family: 'Lato', 'Courier New', monospace;
@@ -1015,6 +1119,11 @@ em { color: var(--papyrus); font-style: italic; }
   color: var(--gold-lt);
   background: rgba(201,162,39,0.13);
   border-color: rgba(201,162,39,0.5);
+}
+.ref-group.missed {
+  color: #ff8070;
+  background: rgba(139,26,0,0.18);
+  border-color: rgba(200,80,60,0.5);
 }
 
 .ref-note {
@@ -1136,6 +1245,11 @@ footer { background: var(--bg-0); }
   .facts-grid { grid-template-columns: 1fr; }
   .egypt-cards { grid-template-columns: 1fr; }
   .properties-grid { grid-template-columns: 1fr; }
+  /* study list: row number on its own line, five even columns */
+  .ref-row { grid-template-columns: 1fr; gap: 0.25rem; }
+  .ref-row-label { text-align: left; padding: 0; }
+  .ref-row-groups { grid-template-columns: repeat(5, 1fr); gap: 0.3rem; }
+  .ref-group { padding: 0.25rem 0; text-align: center; font-size: 0.8rem; letter-spacing: 0.06em; }
   /* stack each row as a small card */
   .comp-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .comp-table, .comp-table tbody, .comp-table tr, .comp-table th, .comp-table td { display: block; }

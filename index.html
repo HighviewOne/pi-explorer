@@ -20,6 +20,8 @@
 </head>
 <body>
 
+  <a class="skip-link" href="#main">Skip to content</a>
+
   <!-- Navigation -->
   <nav id="navbar">
     <div class="nav-inner">
@@ -38,6 +40,8 @@
       </button>
     </div>
   </nav>
+
+  <main id="main" tabindex="-1">
 
   <!-- ═══════════════════════ HERO ═══════════════════════ -->
   <section id="hero">
@@ -284,17 +288,16 @@
       <div class="egypt-cards">
         <div class="egypt-card">
           <div class="egypt-card-head">
-            <span class="egypt-icon">📜</span>
+            <span class="egypt-icon">🪢</span>
             <div>
-              <h3>The Rhind Mathematical Papyrus</h3>
-              <span class="egypt-date">c. 1650 BC</span>
+              <h4>The Rope Stretchers</h4>
+              <span class="egypt-date">c. 3000 BC</span>
             </div>
           </div>
           <div class="egypt-card-body">
-            <p>Egyptian scribe <strong>Ahmes</strong> copied a remarkable document now known as the Rhind Mathematical Papyrus. Problem 50 asks: <em>"A circular field has diameter 9 khet. What is its area?"</em></p>
-            <p>Ahmes solved it by squaring 8/9 of the diameter:</p>
-            <div class="formula-block">Area = (8/9 × 9)² = 8² = 64 square khet</div>
-            <p>This implies <strong>π ≈ 256/81 ≈ 3.16049…</strong> — only 0.6% off from the true value. Astonishing for 3,600 years ago.</p>
+            <p>Ancient Egyptian surveyors — called <strong>Harpedonaptai</strong> (rope stretchers) — used knotted ropes to lay out fields, temples, and cities with extraordinary precision.</p>
+            <p>Marking curved temple walls and circular ritual spaces required understanding how far a circular path would travel. Their practical mastery of circles was passed down through generations, forming the living roots of formal geometry.</p>
+            <p>Without these rope stretchers, the great monuments of Egypt could never have been built.</p>
           </div>
         </div>
 
@@ -302,7 +305,7 @@
           <div class="egypt-card-head">
             <span class="egypt-icon">🔺</span>
             <div>
-              <h3>The Great Pyramid of Giza</h3>
+              <h4>The Great Pyramid of Giza</h4>
               <span class="egypt-date">c. 2560 BC</span>
             </div>
           </div>
@@ -315,16 +318,17 @@
 
         <div class="egypt-card">
           <div class="egypt-card-head">
-            <span class="egypt-icon">🪢</span>
+            <span class="egypt-icon">📜</span>
             <div>
-              <h3>The Rope Stretchers</h3>
-              <span class="egypt-date">c. 3000 BC</span>
+              <h4>The Rhind Mathematical Papyrus</h4>
+              <span class="egypt-date">c. 1650 BC</span>
             </div>
           </div>
           <div class="egypt-card-body">
-            <p>Ancient Egyptian surveyors — called <strong>Harpedonaptai</strong> (rope stretchers) — used knotted ropes to lay out fields, temples, and cities with extraordinary precision.</p>
-            <p>Marking curved temple walls and circular ritual spaces required understanding how far a circular path would travel. Their practical mastery of circles was passed down through generations, forming the living roots of formal geometry.</p>
-            <p>Without these rope stretchers, the great monuments of Egypt could never have been built.</p>
+            <p>Egyptian scribe <strong>Ahmes</strong> copied a remarkable document now known as the Rhind Mathematical Papyrus. Problem 50 asks: <em>"A circular field has diameter 9 khet. What is its area?"</em></p>
+            <p>Ahmes solved it by squaring 8/9 of the diameter:</p>
+            <div class="formula-block">Area = (8/9 × 9)² = 8² = 64 square khet</div>
+            <p>This implies <strong>π ≈ 256/81 ≈ 3.16049…</strong> — only 0.6% off from the true value. Astonishing for 3,600 years ago.</p>
           </div>
         </div>
       </div>
@@ -467,7 +471,7 @@
         <div class="fact-card">
           <div class="fact-num">1</div>
           <h3>Pi Day</h3>
-          <p>March 14 (3/14) is celebrated as Pi Day worldwide. It is also the birthday of <strong>Albert Einstein</strong>! On March 14, 2015 at 9:26:53 AM the date and time spelled out 3.14159265358 — a once-in-a-century Pi moment.</p>
+          <p>March 14 (3/14) is celebrated as Pi Day worldwide. It is also the birthday of <strong>Albert Einstein</strong>! On March 14, 2015 at 9:26:53 AM the date and time spelled out 3.141592653 — a once-in-a-century Pi moment.</p>
         </div>
 
         <div class="fact-card">
@@ -522,18 +526,28 @@
   <section id="challenge">
     <div class="container">
       <h2 class="section-title">The Pi Challenge</h2>
-      <p class="section-intro">How many digits of π can you recite from memory? Type each digit after the decimal point. One mistake ends your run — but you can always try again!</p>
+      <p class="section-intro">How many of the first 1,000 digits of π can you recite from memory? Type each digit after the decimal point. In a Challenge, one mistake ends your run. In Practice, a slip just shows you the right digit and you keep going — and you can start anywhere to drill a tricky stretch.</p>
 
       <div class="game-wrapper">
+
+        <!-- Mode -->
+        <div class="mode-row" role="group" aria-label="Game mode">
+          <button type="button" class="mode-btn active" id="modeChallenge" aria-pressed="true">Challenge</button>
+          <button type="button" class="mode-btn" id="modePractice" aria-pressed="false">Practice</button>
+        </div>
+        <div class="practice-opts" id="practiceOpts" hidden>
+          <label for="startSelect">Start at</label>
+          <select id="startSelect"></select>
+        </div>
 
         <!-- Stats bar -->
         <div class="stats-bar">
           <div class="stat">
-            <span class="stat-label">Current Score</span>
+            <span class="stat-label" id="scoreLabel">Current Score</span>
             <span class="stat-value" id="currentScore">0</span>
           </div>
           <div class="stat highlight-stat">
-            <span class="stat-label">Personal Best ✦</span>
+            <span class="stat-label" id="bestLabel">Personal Best ✦</span>
             <span class="stat-value" id="personalBest">0</span>
           </div>
           <div class="stat">
@@ -565,14 +579,16 @@
 
         <!-- Reference digits -->
         <div class="pi-reference">
-          <h3>First 50 digits — for reference &amp; study:</h3>
-          <div class="ref-digits" id="refDigits"></div>
-          <p class="ref-note">Digits light up gold as you type them correctly.</p>
+          <h3>The first 1,000 digits — for reference &amp; study:</h3>
+          <div class="ref-digits" id="refDigits" tabindex="0" role="region" aria-label="First 1,000 digits of pi"></div>
+          <p class="ref-note">Groups light up gold as you type them correctly. In Practice, a group with a slip turns red — those are the ones to study.</p>
         </div>
 
       </div>
     </div>
   </section>
+
+  </main>
 
   <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
   <footer>
