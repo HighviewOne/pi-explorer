@@ -1,0 +1,14 @@
+{
+  "name": "Pi Explorer — Journey Through the Infinite",
+  "short_name": "Pi Explorer",
+  "description": "The story of π from ancient Egypt to supercomputers, and a challenge to memorise its digits.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090401",
+  "theme_color": "#090401",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

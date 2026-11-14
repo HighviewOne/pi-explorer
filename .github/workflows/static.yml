@@ -28,7 +28,8 @@ jobs:
         # publish only the site itself, not README/LICENSE/.github
         run: |
           mkdir _site
-          cp index.html style.css script.js logo.svg favicon.svg og-image.png _site/
+          cp index.html style.css script.js logo.svg favicon.svg og-image.png \
+             manifest.webmanifest sw.js icon-192.png icon-512.png apple-touch-icon.png _site/
       - name: Upload static files
         uses: actions/upload-pages-artifact@v5
         with:

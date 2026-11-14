@@ -25,11 +25,13 @@ index.html    # all content and sections
 style.css     # styling
 script.js     # interactivity (nav, timeline animations, copy button, Pi Challenge game)
 logo.svg, favicon.svg, og-image.png   # artwork and the social-share preview image
+manifest.webmanifest, sw.js          # installable app + offline support (network-first cache)
+icon-192.png, icon-512.png, apple-touch-icon.png   # home-screen icons, rendered from logo.svg
 ```
 
 ## Running locally
 
-Just open `index.html` in a browser, or serve the folder:
+Just open `index.html` in a browser, or serve the folder (needed to test offline mode — the service worker doesn't run from `file://`):
 
 ```bash
 python -m http.server 8000

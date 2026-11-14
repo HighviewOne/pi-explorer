@@ -710,6 +710,93 @@ em { color: var(--papyrus); font-style: italic; }
   background: linear-gradient(135deg, #1e1200, #120900);
 }
 
+/* Archimedes polygon explorer */
+.arch-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+.arch-box h3 {
+  font-family: 'Cinzel', Georgia, serif;
+  color: var(--gold);
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  letter-spacing: 0.1em;
+}
+.arch-intro {
+  max-width: 640px;
+  margin: 0 auto 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--papyrus-m);
+}
+.arch-in  { color: #5fd0d0; }
+.arch-out { color: #ff8070; }
+.arch-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 2rem;
+  align-items: center;
+}
+.arch-svg { width: 100%; max-width: 320px; margin: 0 auto; display: block; }
+.arch-circle   { fill: rgba(201,162,39,0.06); stroke: var(--gold-lt); stroke-width: 2.5; }
+.arch-poly-in  { fill: rgba(43,179,179,0.10); stroke: #2bb3b3; stroke-width: 2; stroke-linejoin: round; }
+.arch-poly-out { fill: none; stroke: #e0553a; stroke-width: 2; stroke-linejoin: round; }
+
+.arch-label {
+  display: block;
+  font-family: 'Cinzel', Georgia, serif;
+  color: var(--papyrus);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+}
+.arch-label output { color: var(--gold-lt); font-weight: 700; }
+#archSides { width: 100%; accent-color: var(--gold); }
+.arch-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.6rem 0 1.2rem;
+}
+.arch-steps-label { font-size: 0.8rem; color: var(--papyrus-d); margin-right: 0.2rem; }
+.arch-steps button {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.8rem;
+  color: var(--papyrus-m);
+  background: rgba(201,162,39,0.05);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+}
+.arch-steps button[aria-pressed="true"] {
+  color: #080300;
+  background: var(--gold-lt);
+  border-color: var(--gold-lt);
+  font-weight: 700;
+}
+html:not(.js) .arch-controls { display: none; }
+
+.arch-readout { margin: 0; }
+.arch-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(201,162,39,0.1);
+}
+.arch-row dt { font-size: 0.85rem; }
+.arch-row dd { margin: 0; font-family: 'Lato', 'Courier New', monospace; font-weight: 700; letter-spacing: 0.06em; }
+.arch-pi dt, .arch-pi dd { color: var(--gold-lt); }
+.arch-gap { border-bottom: none; }
+.arch-gap dt, .arch-gap dd { color: var(--papyrus-m); font-weight: 400; }
+.arch-note { margin-top: 1rem; font-size: 0.82rem; color: var(--papyrus-d); line-height: 1.6; }
+.arch-note sup, .arch-note sub { font-size: 0.7em; }
+
 .comparison-box {
   background: var(--bg-card);
   border: 1px solid var(--border);
@@ -898,6 +985,19 @@ em { color: var(--papyrus); font-style: italic; }
   letter-spacing: 0.1em;
 }
 .practice-opts[hidden] { display: none; }
+.practice-opts { flex-wrap: wrap; }
+.drill-btn {
+  font: inherit;
+  letter-spacing: 0.08em;
+  color: #ffb0a4;
+  background: rgba(139,26,0,0.22);
+  border: 1px solid rgba(200,80,60,0.5);
+  border-radius: 2px;
+  padding: 0.4rem 0.9rem;
+  cursor: pointer;
+}
+.drill-btn:hover { background: rgba(139,26,0,0.35); }
+.drill-btn[hidden] { display: none; }
 .practice-opts select {
   font: inherit;
   letter-spacing: 0.05em;
@@ -1253,6 +1353,9 @@ footer { background: var(--bg-0); }
   .comp-table th, .comp-table td { padding: 0.6rem 0.6rem; }
 
   .tap-hint { display: block; }
+  .arch-layout { grid-template-columns: 1fr; gap: 1.2rem; }
+  .arch-box { padding: 1.4rem 1.1rem; }
+  .arch-svg { max-width: 240px; }
 
   .container { padding: 3rem 1.2rem; }
 }

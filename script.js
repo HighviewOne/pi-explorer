@@ -76,6 +76,18 @@ function formatBestDate(iso) {
   return new Date(y, m - 1, d).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
+/* Groups of 5 (index = first digit / 5) slipped on in Practice; cleared by drilling */
+const MISSED_KEY = 'piExplorerMissed';
+function loadMissed() {
+  try {
+    const arr = JSON.parse(localStorage.getItem(MISSED_KEY) || '[]');
+    return new Set(Array.isArray(arr) ? arr.filter(n => Number.isInteger(n) && n >= 0 && n < 200) : []);
+  } catch { return new Set(); }
+}
+function saveMissed() {
+  try { localStorage.setItem(MISSED_KEY, JSON.stringify([...missedGroups])); } catch { /* not persisted */ }
+}
+
 /* ─── Game state ─── */
 let mode        = 'challenge';  /* 'challenge' | 'practice' */
 let active      = false;
@@ -86,6 +98,8 @@ let bestScore   = loadBest();
 let bestDate    = loadBestDate();
 let runStartBest = bestScore;   /* best before this run, to detect a true new record */
 let mileSeen    = new Set();
+let missedGroups = loadMissed();
+let drill       = null;          /* { queue, hadSlip, cleared, timer } while drilling red groups */
 let challengeInView = false;
 let milestoneTimer = null;
 
@@ -110,6 +124,7 @@ const el = {
   modePractice:  document.getElementById('modePractice'),
   practiceOpts:  document.getElementById('practiceOpts'),
   startSelect:   document.getElementById('startSelect'),
+  drillBtn:      document.getElementById('drillBtn'),
 };
 
 let refGroups = [];  /* one span per 5 digits */
@@ -122,7 +137,8 @@ buildRefDigits();
 buildStartSelect();
 resetToIdle();
 
-el.startBtn.addEventListener('click', startGame);
+el.startBtn.addEventListener('click', () => (drill ? resetToIdle() : startGame()));
+el.drillBtn.addEventListener('click', startDrill);
 el.displayArea.addEventListener('click', () => {
   if (active) el.hiddenInput.focus({ preventScroll: true });
 });
@@ -144,7 +160,10 @@ document.addEventListener('keydown', (e) => {
   e.preventDefault();
   /* startGame() is synchronous, and preventDefault() above stops the key from
      also reaching the hidden input, so the digit can be processed straight away */
-  if (!active) startGame();
+  if (!active) {
+    if (drill) return;  /* short pause between drill groups */
+    startGame();
+  }
   processDigit(e.key);
 });
 
@@ -173,6 +192,7 @@ function setMode(m) {
 
 /* Clear the board and wait for a new run in the current mode */
 function resetToIdle() {
+  if (drill) { clearTimeout(drill.timer); drill = null; }
   active = false;
   const practice = mode === 'practice';
   start = practice ? Number(el.startSelect.value) || 0 : 0;
@@ -193,6 +213,7 @@ function resetToIdle() {
   resetRef();
   scrollRefTo(start);
   updateStats();
+  refreshDrillBtn();
 }
 
 /* ═══════════════════════════════════════════
@@ -254,6 +275,7 @@ function correct(d) {
   appendDigit(d, 'digit-ok', pos);
   markRef(pos, false);
   pos++;
+  if (drill) { drillStep(); return; }
 
   if (mode === 'challenge' && pos > bestScore) {
     bestScore = pos;
@@ -272,8 +294,12 @@ function slip(want) {
   slips++;
   appendDigit(want, 'digit-miss', pos);
   markRef(pos, true);
+  missedGroups.add(Math.floor(pos / 5));
+  saveMissed();
   pos++;
   shake();
+  if (drill) { drill.hadSlip = true; drillStep(want); return; }
+  refreshDrillBtn();
   updateStats();
   el.digitHint.textContent = `Oops — digit ${pos} is ${want}. Keep going with digit ${pos + 1}…`;
 
@@ -324,7 +350,13 @@ function allComplete() {
 }
 
 function updateStats() {
-  if (mode === 'practice') {
+  if (drill) {
+    el.scoreLabel.textContent   = 'Groups Left';
+    el.bestLabel.textContent    = 'Slips';
+    el.currentScore.textContent = drill.queue.length;
+    el.personalBest.textContent = slips;
+    el.bestDate.textContent     = '';
+  } else if (mode === 'practice') {
     el.scoreLabel.textContent   = 'Correct';
     el.bestLabel.textContent    = 'Slips';
     el.currentScore.textContent = pos - start - slips;
@@ -348,11 +380,90 @@ function shake() {
 }
 
 /* ═══════════════════════════════════════════
+   DRILL — repeat each red group until it's typed perfectly
+   ═══════════════════════════════════════════ */
+function refreshDrillBtn() {
+  const n = missedGroups.size;
+  el.drillBtn.hidden = n === 0 || !!drill;
+  el.drillBtn.textContent = `Drill my red groups (${n})`;
+}
+
+function startDrill() {
+  resetToIdle();
+  if (!missedGroups.size) return;
+  drill = { queue: [...missedGroups].sort((a, b) => a - b), hadSlip: false, cleared: 0, timer: null };
+  slips = 0;
+  hideMsg();
+  el.startBtn.textContent = 'Stop Drill';
+  refreshDrillBtn();
+  nextDrillGroup();
+}
+
+function nextDrillGroup() {
+  start = drill.queue[0] * 5;
+  pos   = start;
+  drill.hadSlip = false;
+  el.typedDigits.innerHTML = '';
+  showContext();
+  el.cursor.style.display   = 'inline';
+  el.gameStatus.textContent = 'Drilling';
+  el.digitHint.textContent  = `Drill: type digits ${start + 1}–${start + 5}…`;
+  scrollRefTo(start);
+  updateStats();
+  active = true;
+  el.hiddenInput.focus({ preventScroll: true });
+}
+
+/* After each digit in a drill; `want` is set when it was a slip */
+function drillStep(want) {
+  if (pos < start + 5) {
+    updateStats();
+    el.digitHint.textContent = want
+      ? `Oops — digit ${pos} is ${want}. Keep going…`
+      : `Digit ${pos} ✓ — keep going…`;
+    return;
+  }
+  /* group finished */
+  active = false;
+  const g = drill.queue.shift();
+  if (drill.hadSlip) {
+    drill.queue.push(g);
+    el.digitHint.textContent = `Not quite — digits ${start + 1}–${start + 5} will come round again.`;
+  } else {
+    missedGroups.delete(g);
+    saveMissed();
+    refGroups[g].classList.remove('missed');
+    refGroups[g].classList.add('lit');
+    drill.cleared++;
+    el.digitHint.textContent = `✓ Digits ${start + 1}–${start + 5} cleared!`;
+  }
+  updateStats();
+  if (drill.queue.length) drill.timer = setTimeout(nextDrillGroup, 900);
+  else finishDrill();
+}
+
+function finishDrill() {
+  const n = drill.cleared;
+  drill = null;
+  pos = start; slips = 0;
+  el.gameStatus.textContent = 'Complete!';
+  el.cursor.style.display   = 'none';
+  el.gameMsg.className = 'game-msg best';
+  el.gameMsg.innerHTML = `🎉 <strong>All red groups cleared!</strong> You drilled ${n} group${n === 1 ? '' : 's'} until ${n === 1 ? 'it was' : 'they were'} perfect.`;
+  celebrate(true);
+  el.startBtn.textContent  = 'Start Practice';
+  el.digitHint.textContent = 'Pick a starting point, then press a digit key or click Start Practice.';
+  updateStats();
+  refreshDrillBtn();
+}
+
+/* ═══════════════════════════════════════════
    MILESTONE SYSTEM
    ═══════════════════════════════════════════ */
 function checkMilestone(count) {
   for (const m of MILESTONES) {
     if (count !== m.at || mileSeen.has(m.at)) continue;
+    if (drill) return;
     if (mode === 'practice' && !(m.anyMode && start <= m.from)) continue;
     mileSeen.add(m.at);
     showMilestone(m.msg);
@@ -480,6 +591,7 @@ function buildStartSelect() {
 
 function resetRef() {
   for (const g of refGroups) g.classList.remove('lit', 'missed');
+  for (const i of missedGroups) refGroups[i]?.classList.add('missed');
 }
 
 /* Called after digit index i has been typed */
@@ -550,6 +662,48 @@ createFloatingDigits();
 
     tlItems.forEach(item => itemObs.observe(item));
   }
+})();
+
+/* ═══════════════════════════════════════════
+   ARCHIMEDES POLYGON EXPLORER
+   ═══════════════════════════════════════════ */
+(function () {
+  const slider = document.getElementById('archSides');
+  if (!slider) return;
+  const out    = document.getElementById('archSidesOut');
+  const inner  = document.getElementById('archInner');
+  const outer  = document.getElementById('archOuter');
+  const upper  = document.getElementById('archUpper');
+  const lower  = document.getElementById('archLower');
+  const gap    = document.getElementById('archGap');
+  const steps  = document.querySelectorAll('.arch-steps button');
+
+  /* n vertices on radius R, first one at the top. With the same angles, the
+     outer polygon's sides touch the circle half-way between its corners. */
+  const points = (n, R) => Array.from({ length: n }, (_, k) => {
+    const a = -Math.PI / 2 + (2 * Math.PI * k) / n;
+    return `${(R * Math.cos(a)).toFixed(2)},${(R * Math.sin(a)).toFixed(2)}`;
+  }).join(' ');
+
+  function draw(n) {
+    const lo = n * Math.sin(Math.PI / n);   /* inside perimeter ÷ diameter */
+    const hi = n * Math.tan(Math.PI / n);   /* outside perimeter ÷ diameter */
+    inner.setAttribute('points', points(n, 100));
+    outer.setAttribute('points', points(n, 100 / Math.cos(Math.PI / n)));
+    out.textContent   = n;
+    lower.textContent = lo.toFixed(5);
+    upper.textContent = hi.toFixed(5);
+    gap.textContent   = (hi - lo).toFixed(5);
+    slider.setAttribute('aria-valuetext', `${n} sides: π is between ${lo.toFixed(4)} and ${hi.toFixed(4)}`);
+    steps.forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.sides) === n)));
+  }
+
+  slider.addEventListener('input', () => draw(Number(slider.value)));
+  steps.forEach(b => b.addEventListener('click', () => {
+    slider.value = b.dataset.sides;
+    draw(Number(b.dataset.sides));
+  }));
+  draw(Number(slider.value));
 })();
 
 /* ═══════════════════════════════════════════
@@ -633,5 +787,14 @@ if (hamburgerBtn && navBar) {
       hamburgerBtn.setAttribute('aria-expanded', 'false');
       hamburgerBtn.focus();
     }
+  });
+}
+
+/* ═══════════════════════════════════════════
+   OFFLINE SUPPORT (service worker; needs http(s), not file://)
+   ═══════════════════════════════════════════ */
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => { /* site still works online */ });
   });
 }

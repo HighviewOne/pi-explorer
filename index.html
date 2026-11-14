@@ -16,6 +16,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=Lato:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="theme-color" content="#090401">
+  <meta name="apple-mobile-web-app-title" content="Pi Explorer">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -434,6 +438,41 @@
 
       </div>
 
+      <!-- ── Archimedes polygon explorer ── -->
+      <div class="arch-box" id="archimedes">
+        <h3>Try It Like Archimedes</h3>
+        <p class="arch-intro">Archimedes trapped π between two polygons: one drawn just <span class="arch-in">inside</span> a circle and one just <span class="arch-out">outside</span> it. The circle's edge is always longer than the inside polygon and shorter than the outside one — so π must lie between them. More sides means a tighter trap.</p>
+        <div class="arch-layout">
+          <svg class="arch-svg" viewBox="-150 -150 300 300" role="img" aria-labelledby="archSvgTitle">
+            <title id="archSvgTitle">A circle with a polygon drawn inside it and another drawn outside it</title>
+            <polygon id="archOuter" class="arch-poly-out" points="0.00,-115.47 100.00,-57.74 100.00,57.74 0.00,115.47 -100.00,57.74 -100.00,-57.74"/>
+            <circle cx="0" cy="0" r="100" class="arch-circle"/>
+            <polygon id="archInner" class="arch-poly-in" points="0.00,-100.00 86.60,-50.00 86.60,50.00 0.00,100.00 -86.60,50.00 -86.60,-50.00"/>
+          </svg>
+          <div class="arch-panel">
+            <div class="arch-controls">
+              <label class="arch-label" for="archSides">Sides: <output id="archSidesOut" for="archSides">6</output></label>
+              <input type="range" id="archSides" min="4" max="96" step="1" value="6">
+              <div class="arch-steps" role="group" aria-label="Archimedes' steps">
+                <span class="arch-steps-label">Archimedes' steps:</span>
+                <button type="button" data-sides="6" aria-pressed="true">6</button>
+                <button type="button" data-sides="12" aria-pressed="false">12</button>
+                <button type="button" data-sides="24" aria-pressed="false">24</button>
+                <button type="button" data-sides="48" aria-pressed="false">48</button>
+                <button type="button" data-sides="96" aria-pressed="false">96</button>
+              </div>
+            </div>
+            <dl class="arch-readout">
+              <div class="arch-row arch-out"><dt>Outside polygon</dt><dd id="archUpper">3.46410</dd></div>
+              <div class="arch-row arch-pi"><dt>π</dt><dd>3.14159…</dd></div>
+              <div class="arch-row arch-in"><dt>Inside polygon</dt><dd id="archLower">3.00000</dd></div>
+              <div class="arch-row arch-gap"><dt>Size of the trap</dt><dd id="archGap">0.46410</dd></div>
+            </dl>
+            <p class="arch-note">Each number is the polygon's perimeter divided by the circle's diameter. Archimedes did it by hand, doubling 6 → 12 → 24 → 48 → 96 sides, and proved 3<sup>10</sup>⁄<sub>71</sub> &lt; π &lt; 3<sup>1</sup>⁄<sub>7</sub> — about 3.1408 &lt; π &lt; 3.1429.</p>
+          </div>
+        </div>
+      </div>
+
       <!-- ── World comparison table ── -->
       <div class="comparison-box">
         <h3>π Approximations Across History</h3>
@@ -538,6 +577,7 @@
         <div class="practice-opts" id="practiceOpts" hidden>
           <label for="startSelect">Start at</label>
           <select id="startSelect"></select>
+          <button type="button" class="drill-btn" id="drillBtn" hidden>Drill my red groups</button>
         </div>
 
         <!-- Stats bar -->
@@ -582,7 +622,7 @@
         <div class="pi-reference">
           <h3>The first 1,000 digits — for reference &amp; study:</h3>
           <div class="ref-digits" id="refDigits" tabindex="0" role="region" aria-label="First 1,000 digits of pi"></div>
-          <p class="ref-note">Groups light up gold as you type them correctly. In Practice, a group with a slip turns red — those are the ones to study.</p>
+          <p class="ref-note">Groups light up gold as you type them correctly. In Practice, a group with a slip turns red and stays red (even after you leave) until you clear it with “Drill my red groups”.</p>
         </div>
 
       </div>
