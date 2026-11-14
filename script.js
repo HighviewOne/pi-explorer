@@ -58,6 +58,24 @@ function saveBest(n) {
   try { localStorage.setItem(BEST_KEY, n); } catch { /* not persisted */ }
 }
 
+/* Date the personal best was set, stored as local YYYY-MM-DD */
+const BEST_DATE_KEY = 'piExplorerBestDate';
+function loadBestDate() {
+  try { return localStorage.getItem(BEST_DATE_KEY) || ''; }
+  catch { return ''; }
+}
+function saveBestDate() {
+  const d = new Date();
+  const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  bestDate = iso;
+  try { localStorage.setItem(BEST_DATE_KEY, iso); } catch { /* not persisted */ }
+}
+function formatBestDate(iso) {
+  const [y, m, d] = iso.split('-').map(Number);
+  if (!y || !m || !d) return '';
+  return new Date(y, m - 1, d).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
 /* ─── Game state ─── */
 let mode        = 'challenge';  /* 'challenge' | 'practice' */
 let active      = false;
@@ -65,6 +83,7 @@ let start       = 0;            /* index of the first digit in this run */
 let pos         = 0;            /* index of the next digit to type */
 let slips       = 0;            /* practice-mode mistakes */
 let bestScore   = loadBest();
+let bestDate    = loadBestDate();
 let runStartBest = bestScore;   /* best before this run, to detect a true new record */
 let mileSeen    = new Set();
 let challengeInView = false;
@@ -76,6 +95,7 @@ const el = {
   cursor:       document.getElementById('gameCursor'),
   currentScore: document.getElementById('currentScore'),
   personalBest: document.getElementById('personalBest'),
+  bestDate:     document.getElementById('bestDate'),
   scoreLabel:   document.getElementById('scoreLabel'),
   bestLabel:    document.getElementById('bestLabel'),
   gameStatus:   document.getElementById('gameStatus'),
@@ -238,6 +258,7 @@ function correct(d) {
   if (mode === 'challenge' && pos > bestScore) {
     bestScore = pos;
     saveBest(bestScore);
+    if (pos === runStartBest + 1) saveBestDate();  /* once per run, when the record is first beaten */
   }
   updateStats();
   el.digitHint.textContent = `Digit ${pos} ✓ — now type digit ${pos + 1}…`;
@@ -277,6 +298,7 @@ function wrong(correctDigit) {
     (pos > runStartBest
       ? '🎉 That was a new personal best!'
       : '');
+  if (pos > runStartBest && pos >= 5) celebrate(false);
 
   el.digitHint.textContent = 'Click "Try Again" or press a digit key to start over.';
   el.startBtn.textContent  = 'Try Again';
@@ -296,6 +318,7 @@ function allComplete() {
       ? `👑 <strong>Perfect practice!</strong> Digits ${start + 1}–1,000 with no slips. Time for a Challenge run?`
       : `<strong>Practice complete!</strong> ${typed - slips} of ${typed} digits right, ${slips} slip${slips === 1 ? '' : 's'}. The red groups below are the ones to study.`;
   }
+  celebrate(true);
   el.digitHint.textContent = 'Click "Play Again" or press a digit key to start over.';
   el.startBtn.textContent  = 'Play Again';
 }
@@ -306,11 +329,14 @@ function updateStats() {
     el.bestLabel.textContent    = 'Slips';
     el.currentScore.textContent = pos - start - slips;
     el.personalBest.textContent = slips;
+    el.bestDate.textContent     = '';
   } else {
     el.scoreLabel.textContent   = 'Current Score';
     el.bestLabel.textContent    = 'Personal Best ✦';
     el.currentScore.textContent = pos;
     el.personalBest.textContent = bestScore;
+    const when = bestScore > 0 && bestDate ? formatBestDate(bestDate) : '';
+    el.bestDate.textContent     = when ? `set ${when}` : '';
   }
 }
 
@@ -330,6 +356,7 @@ function checkMilestone(count) {
     if (mode === 'practice' && !(m.anyMode && start <= m.from)) continue;
     mileSeen.add(m.at);
     showMilestone(m.msg);
+    celebrate(false);
     return;
   }
 }
@@ -350,6 +377,70 @@ function hideMilestone() {
 function hideMsg() {
   el.gameMsg.className  = 'game-msg';
   el.gameMsg.innerHTML  = '';
+}
+
+/* ═══════════════════════════════════════════
+   CONFETTI (skipped when reduced motion is on)
+   ═══════════════════════════════════════════ */
+const CONFETTI_COLORS = ['#f0c840', '#c9a227', '#faf0c8', '#e8d5a8', '#1a9090', '#c0391b'];
+let confettiCanvas = null, confettiParts = [], confettiRunning = false;
+
+function celebrate(big) {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!confettiCanvas) {
+    confettiCanvas = document.createElement('canvas');
+    confettiCanvas.className = 'confetti-canvas';
+    confettiCanvas.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(confettiCanvas);
+  }
+  const dpr = window.devicePixelRatio || 1;
+  confettiCanvas.width  = window.innerWidth * dpr;
+  confettiCanvas.height = window.innerHeight * dpr;
+  confettiCanvas.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  /* burst from the top centre of the digit display */
+  const r = el.displayArea.getBoundingClientRect();
+  const ox = r.left + r.width / 2, oy = Math.max(40, r.top);
+  const n = big ? 160 : 60;
+  for (let i = 0; i < n; i++) {
+    const a = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 0.9;  /* mostly upward */
+    const v = (big ? 9 : 6) + Math.random() * (big ? 8 : 5);
+    confettiParts.push({
+      x: ox + (Math.random() - 0.5) * r.width * 0.4, y: oy,
+      vx: Math.cos(a) * v, vy: Math.sin(a) * v,
+      rot: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
+      w: 5 + Math.random() * 6, h: 3 + Math.random() * 4,
+      pi: Math.random() < 0.15,  /* a few golden π symbols */
+      color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+      life: 0, max: 90 + Math.random() * 60,
+    });
+  }
+  if (!confettiRunning) { confettiRunning = true; requestAnimationFrame(confettiFrame); }
+}
+
+function confettiFrame() {
+  const ctx = confettiCanvas.getContext('2d');
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  confettiParts = confettiParts.filter(p => p.life < p.max && p.y < window.innerHeight + 20);
+  for (const p of confettiParts) {
+    p.life++;
+    p.vy += 0.25; p.vx *= 0.985; p.vy *= 0.985;
+    p.x += p.vx;  p.y += p.vy;  p.rot += p.vr;
+    ctx.save();
+    ctx.globalAlpha = Math.min(1, (p.max - p.life) / 30);
+    ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+    if (p.pi) {
+      ctx.fillStyle = '#f0c840';
+      ctx.font = 'bold 16px Georgia, serif';
+      ctx.fillText('π', -5, 5);
+    } else {
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+    }
+    ctx.restore();
+  }
+  if (confettiParts.length) requestAnimationFrame(confettiFrame);
+  else { confettiRunning = false; ctx.clearRect(0, 0, window.innerWidth, window.innerHeight); }
 }
 
 /* ═══════════════════════════════════════════
