@@ -1053,6 +1053,27 @@ html:not(.js) .arch-controls { display: none; }
   animation: digitPop 0.18s ease;
 }
 .digit-context { color: var(--papyrus-d); }
+.digit-peeked {
+  color: #5fd0d0;            /* typed after a peek: right, but with help */
+  display: inline-block;
+  animation: digitPop 0.18s ease;
+}
+.digit-peek {
+  color: var(--papyrus-d);
+  opacity: 0.75;
+  border-bottom: 1px dashed var(--papyrus-d);
+}
+.digit-peek:empty { display: none; }
+
+.streak {
+  text-align: center;
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.85rem;
+  color: var(--gold-lt);
+  letter-spacing: 0.05em;
+  margin: -0.8rem 0 1.2rem;
+}
+.streak[hidden] { display: none; }
 
 .digit-gap {
   display: inline-block;
@@ -1157,6 +1178,23 @@ html:not(.js) .arch-controls { display: none; }
   box-shadow: 0 7px 28px rgba(201,162,39,0.5);
 }
 .btn-gold:active { transform: translateY(0); }
+
+.btn-ghost {
+  font-family: 'Cinzel', Georgia, serif;
+  font-size: 0.9rem;
+  color: var(--gold-lt);
+  background: transparent;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid var(--gold);
+  border-radius: 2px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.btn-ghost:hover { background: rgba(201,162,39,0.1); }
+.btn-ghost[hidden] { display: none; }
+.key-hint { font-size: 0.75em; color: var(--papyrus-m); }
+@media (hover: none) { .key-hint { display: none; } }  /* no keyboard on touch-only devices */
 
 /* Hidden input (mobile) */
 .hidden-input {

@@ -1,0 +1,11 @@
+{
+  "name": "pi-explorer",
+  "private": true,
+  "description": "Browser tests for the Pi Explorer site (the site itself has no build step or dependencies)",
+  "scripts": {
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1"
+  }
+}

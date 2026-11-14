@@ -38,9 +38,23 @@ python -m http.server 8000
 # then open http://localhost:8000
 ```
 
+## Testing
+
+Browser tests live in `tests/site.spec.js` (Playwright, run in the installed Google Chrome). They check the
+1,000 digits against an independent calculation, every game mode (Challenge, Practice, Drill, Peek, streak),
+the Archimedes slider, the mobile menu, offline mode, and that the deploy workflow publishes every file the
+site needs.
+
+```bash
+npm install
+npm test
+```
+
+The site itself still has no dependencies; `package.json` is only for the tests.
+
 ## Deploying
 
-Pushing to `main` deploys automatically via GitHub Actions (`.github/workflows/static.yml`) to GitHub Pages.
+Pushing to `main` runs the tests, then deploys automatically via GitHub Actions (`.github/workflows/static.yml`) to GitHub Pages. If a test fails, nothing is published.
 The workflow publishes an explicit list of files — if you add a new asset (image, page, script), add it to the
 `cp` line in that workflow or it won't be published.
 

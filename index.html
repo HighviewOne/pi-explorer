@@ -597,10 +597,12 @@
           </div>
         </div>
 
+        <p class="streak" id="streak" hidden></p>
+
         <!-- Pi display -->
         <div class="pi-display-area" id="piDisplayArea" tabindex="0" aria-label="Pi digit entry: type the digits of pi after the decimal point">
           <div class="pi-display" id="piDisplay">
-            <span class="pi-prefix">3.</span><span id="typedDigits"></span><span class="cursor-blink" id="gameCursor">_</span>
+            <span class="pi-prefix">3.</span><span id="typedDigits"></span><span class="digit-peek" id="peekDigit"></span><span class="cursor-blink" id="gameCursor">_</span>
           </div>
           <div class="digit-hint" id="digitHint">Press any digit key, or click Begin below</div>
         </div>
@@ -612,6 +614,7 @@
         <!-- Controls -->
         <div class="game-controls">
           <button class="btn-gold" id="startBtn">Begin the Journey</button>
+          <button type="button" class="btn-ghost" id="peekBtn" hidden>Peek <span class="key-hint">(P)</span></button>
         </div>
 
         <!-- Hidden input for mobile keyboard capture -->
@@ -622,7 +625,7 @@
         <div class="pi-reference">
           <h3>The first 1,000 digits — for reference &amp; study:</h3>
           <div class="ref-digits" id="refDigits" tabindex="0" role="region" aria-label="First 1,000 digits of pi"></div>
-          <p class="ref-note">Groups light up gold as you type them correctly. In Practice, a group with a slip turns red and stays red (even after you leave) until you clear it with “Drill my red groups”.</p>
+          <p class="ref-note">Groups light up gold as you type them correctly. In Practice, a group with a slip or a peek turns red and stays red (even after you leave) until you clear it with “Drill my red groups”.</p>
         </div>
 
       </div>

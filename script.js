@@ -58,6 +58,13 @@ function saveBest(n) {
   try { localStorage.setItem(BEST_KEY, n); } catch { /* not persisted */ }
 }
 
+/* Local calendar date as YYYY-MM-DD (offset in days, e.g. -1 = yesterday) */
+function localISO(offsetDays = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 /* Date the personal best was set, stored as local YYYY-MM-DD */
 const BEST_DATE_KEY = 'piExplorerBestDate';
 function loadBestDate() {
@@ -65,8 +72,7 @@ function loadBestDate() {
   catch { return ''; }
 }
 function saveBestDate() {
-  const d = new Date();
-  const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const iso = localISO();
   bestDate = iso;
   try { localStorage.setItem(BEST_DATE_KEY, iso); } catch { /* not persisted */ }
 }
@@ -74,6 +80,19 @@ function formatBestDate(iso) {
   const [y, m, d] = iso.split('-').map(Number);
   if (!y || !m || !d) return '';
   return new Date(y, m - 1, d).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+/* Daily streak: { last: 'YYYY-MM-DD' of the last day played, count: days in a row } */
+const STREAK_KEY = 'piExplorerStreak';
+function loadStreak() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STREAK_KEY) || 'null');
+    if (s && typeof s.last === 'string' && Number.isInteger(s.count) && s.count > 0) return s;
+  } catch { /* fall through */ }
+  return { last: '', count: 0 };
+}
+function saveStreak() {
+  try { localStorage.setItem(STREAK_KEY, JSON.stringify(streak)); } catch { /* not persisted */ }
 }
 
 /* Groups of 5 (index = first digit / 5) slipped on in Practice; cleared by drilling */
@@ -99,6 +118,10 @@ let bestDate    = loadBestDate();
 let runStartBest = bestScore;   /* best before this run, to detect a true new record */
 let mileSeen    = new Set();
 let missedGroups = loadMissed();
+let streak      = loadStreak();
+let peeks       = 0;             /* practice: digits revealed with Peek this run */
+let peekedPos   = -1;            /* index currently revealed by Peek, or -1 */
+let clean       = 0;             /* practice: digits typed right without help */
 let drill       = null;          /* { queue, hadSlip, cleared, timer } while drilling red groups */
 let challengeInView = false;
 let milestoneTimer = null;
@@ -125,6 +148,9 @@ const el = {
   practiceOpts:  document.getElementById('practiceOpts'),
   startSelect:   document.getElementById('startSelect'),
   drillBtn:      document.getElementById('drillBtn'),
+  peekBtn:       document.getElementById('peekBtn'),
+  peekDigit:     document.getElementById('peekDigit'),
+  streak:        document.getElementById('streak'),
 };
 
 let refGroups = [];  /* one span per 5 digits */
@@ -139,6 +165,10 @@ resetToIdle();
 
 el.startBtn.addEventListener('click', () => (drill ? resetToIdle() : startGame()));
 el.drillBtn.addEventListener('click', startDrill);
+/* keep focus on the hidden input so the phone keyboard stays open */
+el.peekBtn.addEventListener('mousedown', (e) => e.preventDefault());
+el.peekBtn.addEventListener('click', peek);
+renderStreak();
 el.displayArea.addEventListener('click', () => {
   if (active) el.hiddenInput.focus({ preventScroll: true });
 });
@@ -155,8 +185,13 @@ new IntersectionObserver((entries) => {
 /* Keyboard input (desktop) */
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey || e.altKey || e.metaKey) return;
-  if (!/^[0-9]$/.test(e.key)) return;
   if (!challengeInView && document.activeElement !== el.hiddenInput) return;
+  if ((e.key === 'p' || e.key === 'P') && canPeek()) {
+    e.preventDefault();
+    peek();
+    return;
+  }
+  if (!/^[0-9]$/.test(e.key)) return;
   e.preventDefault();
   /* startGame() is synchronous, and preventDefault() above stops the key from
      also reaching the hidden input, so the digit can be processed straight away */
@@ -198,6 +233,9 @@ function resetToIdle() {
   start = practice ? Number(el.startSelect.value) || 0 : 0;
   pos   = start;
   slips = 0;
+  peeks = 0;
+  clean = 0;
+  clearPeek();
 
   el.typedDigits.innerHTML = '';
   showContext();
@@ -229,13 +267,16 @@ function startGame() {
   el.digitHint.textContent  = start === 0
     ? 'Type the first digit after the decimal point…'
     : `Type digit ${start + 1}…`;
+  if (mode === 'practice') el.digitHint.textContent += ' (stuck? press P or tap Peek)';
   el.startBtn.textContent   = 'Restart';
+  refreshPeekBtn();
 
   el.hiddenInput.focus({ preventScroll: true });
 }
 
 function processDigit(d) {
   if (!active || pos >= TOTAL) return;
+  recordActivity();
   const want = PI_DIGITS[pos];
   if (d === want)              correct(d);
   else if (mode === 'practice') slip(want);
@@ -272,10 +313,19 @@ function appendDigit(d, cls, i) {
 }
 
 function correct(d) {
-  appendDigit(d, 'digit-ok', pos);
-  markRef(pos, false);
+  const helped = peekedPos === pos;  /* typed after peeking: right, but not from memory */
+  clearPeek();
+  appendDigit(d, helped ? 'digit-peeked' : 'digit-ok', pos);
+  markRef(pos, helped);
+  if (helped) {
+    missedGroups.add(Math.floor(pos / 5));
+    saveMissed();
+  } else {
+    clean++;
+  }
   pos++;
   if (drill) { drillStep(); return; }
+  if (helped) refreshDrillBtn();
 
   if (mode === 'challenge' && pos > bestScore) {
     bestScore = pos;
@@ -291,6 +341,7 @@ function correct(d) {
 
 /* Practice: show the right digit in red and carry on */
 function slip(want) {
+  clearPeek();
   slips++;
   appendDigit(want, 'digit-miss', pos);
   markRef(pos, true);
@@ -345,6 +396,7 @@ function allComplete() {
       : `<strong>Practice complete!</strong> ${typed - slips} of ${typed} digits right, ${slips} slip${slips === 1 ? '' : 's'}. The red groups below are the ones to study.`;
   }
   celebrate(true);
+  refreshPeekBtn();
   el.digitHint.textContent = 'Click "Play Again" or press a digit key to start over.';
   el.startBtn.textContent  = 'Play Again';
 }
@@ -355,13 +407,13 @@ function updateStats() {
     el.bestLabel.textContent    = 'Slips';
     el.currentScore.textContent = drill.queue.length;
     el.personalBest.textContent = slips;
-    el.bestDate.textContent     = '';
+    el.bestDate.textContent     = peekText();
   } else if (mode === 'practice') {
     el.scoreLabel.textContent   = 'Correct';
     el.bestLabel.textContent    = 'Slips';
-    el.currentScore.textContent = pos - start - slips;
+    el.currentScore.textContent = clean;
     el.personalBest.textContent = slips;
-    el.bestDate.textContent     = '';
+    el.bestDate.textContent     = peekText();
   } else {
     el.scoreLabel.textContent   = 'Current Score';
     el.bestLabel.textContent    = 'Personal Best ✦';
@@ -370,7 +422,10 @@ function updateStats() {
     const when = bestScore > 0 && bestDate ? formatBestDate(bestDate) : '';
     el.bestDate.textContent     = when ? `set ${when}` : '';
   }
+  refreshPeekBtn();
 }
+
+const peekText = () => (peeks ? `${peeks} peek${peeks === 1 ? '' : 's'}` : '');
 
 function shake() {
   el.displayArea.classList.remove('shake');
@@ -393,6 +448,7 @@ function startDrill() {
   if (!missedGroups.size) return;
   drill = { queue: [...missedGroups].sort((a, b) => a - b), hadSlip: false, cleared: 0, timer: null };
   slips = 0;
+  peeks = 0;
   hideMsg();
   el.startBtn.textContent = 'Stop Drill';
   refreshDrillBtn();
@@ -403,14 +459,15 @@ function nextDrillGroup() {
   start = drill.queue[0] * 5;
   pos   = start;
   drill.hadSlip = false;
+  clearPeek();
   el.typedDigits.innerHTML = '';
   showContext();
   el.cursor.style.display   = 'inline';
   el.gameStatus.textContent = 'Drilling';
   el.digitHint.textContent  = `Drill: type digits ${start + 1}–${start + 5}…`;
   scrollRefTo(start);
-  updateStats();
   active = true;
+  updateStats();
   el.hiddenInput.focus({ preventScroll: true });
 }
 
@@ -445,7 +502,7 @@ function drillStep(want) {
 function finishDrill() {
   const n = drill.cleared;
   drill = null;
-  pos = start; slips = 0;
+  pos = start; slips = 0; peeks = 0;
   el.gameStatus.textContent = 'Complete!';
   el.cursor.style.display   = 'none';
   el.gameMsg.className = 'game-msg best';
@@ -455,6 +512,58 @@ function finishDrill() {
   el.digitHint.textContent = 'Pick a starting point, then press a digit key or click Start Practice.';
   updateStats();
   refreshDrillBtn();
+}
+
+/* ═══════════════════════════════════════════
+   PEEK (Practice and Drill only)
+   ═══════════════════════════════════════════ */
+function canPeek() { return active && mode === 'practice'; }
+
+function refreshPeekBtn() { el.peekBtn.hidden = !canPeek(); }
+
+/* Show the next digit faintly; typing it then counts as helped, not remembered */
+function peek() {
+  if (!canPeek() || peekedPos === pos || pos >= TOTAL) return;
+  peekedPos = pos;
+  peeks++;
+  if (drill) drill.hadSlip = true;  /* a peeked group has to come round again */
+  el.peekDigit.textContent = PI_DIGITS[pos];
+  el.digitHint.textContent = `Peek: digit ${pos + 1} is ${PI_DIGITS[pos]} — now type it.`;
+  updateStats();
+  el.hiddenInput.focus({ preventScroll: true });
+}
+
+function clearPeek() {
+  peekedPos = -1;
+  el.peekDigit.textContent = '';
+}
+
+/* ═══════════════════════════════════════════
+   DAILY STREAK
+   ═══════════════════════════════════════════ */
+/* Called on every digit; does real work only on the first digit of a new day */
+function recordActivity() {
+  const today = localISO();
+  if (streak.last === today) return;
+  streak.count = streak.last === localISO(-1) ? streak.count + 1 : 1;
+  streak.last  = today;
+  saveStreak();
+  renderStreak();
+  if (streak.count > 1) showMilestone(`🔥 ${streak.count} days in a row! Come back tomorrow to make it ${streak.count + 1}.`);
+}
+
+function renderStreak() {
+  const { last, count } = streak;
+  let text = '';
+  if (last === localISO()) {
+    text = count === 1
+      ? '🔥 Day 1 of your streak — come back tomorrow to keep it going'
+      : `🔥 ${count}-day streak`;
+  } else if (last === localISO(-1)) {
+    text = `🔥 ${count}-day streak — play today to keep it going!`;
+  }
+  el.streak.textContent = text;
+  el.streak.hidden = !text;
 }
 
 /* ═══════════════════════════════════════════
